@@ -1,0 +1,128 @@
+# For detailed configuration reference documentation, visit:
+# https://supabase.com/docs/guides/local-development/cli/config
+
+project_id = "control-room"
+
+[api]
+enabled = true
+port = 54321
+schemas = [
+  "public",
+  "graphql_public",
+  "control_room",
+  "app_vortexcore",
+  "app_seftec",
+  "app_saas",
+  "app_apple"
+]
+extra_search_path = [
+  "public",
+  "extensions",
+  "control_room"
+]
+max_rows = 10000
+
+[auth]
+enabled = true
+site_url = "https://seftechub.supabase.co"
+additional_redirect_urls = [
+  "http://localhost:3000",
+  "http://localhost:5173",
+  "https://seftec.store",
+  "https://seftec.tech",
+  "https://vortexcore.app",
+  "https://nixieai.vortexcore.app",
+  "https://nixie.vortexcore.app",
+  "https://me.vortexcore.app",
+  "https://iq.vortexcore.app",
+  "https://auth.vortexcore.app",
+  "https://pay.vortexcore.app",
+  "https://ecosystem.vortexcore.app",
+  "https://api.vortexcore.app",
+  "https://business.vortexcore.app",
+  "https://credit.vortexcore.app",
+  "https://vault.vortexcore.app",
+  "https://seftechub.com",
+  "https://sme.seftec.com",
+  "https://grizzen.solutions",
+  "https://autos.doyen.africa",
+  "https://lanonasis.com"
+]
+
+[auth.email]
+enable_confirmations = true
+max_frequency = "1m0s"
+
+[auth.external.google]
+enabled = true
+client_id = "env(GOOGLE_CLIENT_ID)"
+secret = "env(GOOGLE_CLIENT_SECRET)"
+
+[auth.external.apple]
+enabled = true
+client_id = "env(APPLE_CLIENT_ID)"
+secret = "env(APPLE_CLIENT_SECRET)"
+
+[auth.external.github]
+enabled = true
+client_id = "env(GITHUB_CLIENT_ID)"
+secret = "env(GITHUB_CLIENT_SECRET)"
+
+[auth.external.azure]
+enabled = true
+client_id = "env(AZURE_CLIENT_ID)"
+secret = "env(AZURE_CLIENT_SECRET)"
+
+[db]
+port = 54322
+shadow_port = 54320
+major_version = 15
+
+[db.pooler]
+enabled = false
+port = 54329
+pool_mode = "transaction"
+default_pool_size = 20
+max_client_conn = 100
+
+[db.migrations]
+schema_paths = []
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]
+
+[realtime]
+enabled = true
+
+[studio]
+enabled = true
+port = 54323
+api_url = "http://127.0.0.1"
+openai_api_key = "env(OPENAI_API_KEY)"
+
+[inbucket]
+enabled = true
+port = 54324
+
+[storage]
+enabled = true
+file_size_limit = "50MiB"
+
+[edge_runtime]
+enabled = true
+policy = "oneshot"
+inspector_port = 8083
+deno_version = 1
+
+[analytics]
+enabled = true
+port = 54327
+backend = "postgres"
+
+[experimental]
+orioledb_version = ""
+s3_host = "env(S3_HOST)"
+s3_region = "env(S3_REGION)"
+s3_access_key = "env(S3_ACCESS_KEY)"
+s3_secret_key = "env(S3_SECRET_KEY)"
