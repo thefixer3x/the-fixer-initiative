@@ -73,6 +73,31 @@ enabled = true
 client_id = "env(AZURE_CLIENT_ID)"
 secret = "env(AZURE_CLIENT_SECRET)"
 
+[auth.external.linkedin_oicd]
+enabled = true
+client_id = "env(LINKEDIN_CLIENT_ID)"
+secret = "env(LINKEDIN_CLIENT_SECRET)"
+
+[auth.external.twitter]
+enabled = true
+client_id = "env(TWITTER_CLIENT_ID)"
+secret = "env(TWITTER_CLIENT_SECRET)"
+
+[auth.external.discord]
+enabled = true
+client_id = "env(DISCORD_CLIENT_ID)"
+secret = "env(DISCORD_CLIENT_SECRET)"
+
+[auth.external.slack]
+enabled = true
+client_id = "env(SLACK_CLIENT_ID)"
+secret = "env(SLACK_CLIENT_SECRET)"
+
+[auth.external.spotify]
+enabled = true
+client_id = "env(SPOTIFY_CLIENT_ID)"
+secret = "env(SPOTIFY_CLIENT_SECRET)"
+
 [db]
 port = 54322
 shadow_port = 54320
