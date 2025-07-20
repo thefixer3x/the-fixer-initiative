@@ -1,1 +1,25 @@
-{ "name": "the-fixer-initiative", "version": "0.1.0", "private": true } # Basic package.json
+{
+  "name": "the-fixer-initiative",
+  "version": "1.0.0",
+  "description": "Central control room and aggregator for the complete ecosystem of interconnected platforms and services.",
+  "main": "webhook-test-server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "webhook-test": "node webhook-test-server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thefixer3x/the-fixer-initiative.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/thefixer3x/the-fixer-initiative/issues"
+  },
+  "homepage": "https://github.com/thefixer3x/the-fixer-initiative#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

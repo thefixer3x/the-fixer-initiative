@@ -1,0 +1,134 @@
+{
+  "dashboard": {
+    "title": "The Fixer Initiative - Ecosystem Monitoring",
+    "refresh_interval": 60,
+    "timezone": "UTC"
+  },
+  "repositories": [
+    {
+      "name": "sd-ghost-protocol",
+      "url": "https://github.com/thefixer3x/sd-ghost-protocol",
+      "type": "infrastructure",
+      "status": "active",
+      "monitors": {
+        "uptime": true,
+        "api_health": "https://api.fixer-initiative.com/v1/memory/health",
+        "usage_metrics": true,
+        "error_rate": true
+      }
+    },
+    {
+      "name": "agent-banks",
+      "url": "https://github.com/thefixer3x/agent-banks",
+      "type": "execution",
+      "status": "active",
+      "monitors": {
+        "uptime": true,
+        "api_health": "https://api.fixer-initiative.com/v1/ai/agent-banks/health",
+        "execution_success_rate": true,
+        "user_sessions": true
+      }
+    },
+    {
+      "name": "the-fixer-initiative",
+      "url": "https://github.com/thefixer3x/the-fixer-initiative",
+      "type": "aggregator",
+      "status": "active",
+      "monitors": {
+        "api_gateway_health": true,
+        "vendor_connections": true,
+        "billing_system": true,
+        "sso_status": true
+      }
+    }
+  ],
+  "service_dependencies": {
+    "agent-banks": {
+      "depends_on": ["sd-ghost-protocol", "the-fixer-initiative"],
+      "critical": true
+    },
+    "sub-pro": {
+      "depends_on": ["sd-ghost-protocol", "agent-banks"],
+      "critical": false
+    },
+    "task-manager": {
+      "depends_on": ["agent-banks", "sd-ghost-protocol"],
+      "critical": false
+    },
+    "seftechub": {
+      "depends_on": ["sd-ghost-protocol"],
+      "critical": false
+    },
+    "seftec-shop": {
+      "depends_on": ["seftechub", "agent-banks", "sd-ghost-protocol"],
+      "critical": false
+    },
+    "logistics": {
+      "depends_on": ["sd-ghost-protocol"],
+      "critical": false
+    },
+    "seftec-saas": {
+      "depends_on": ["all"],
+      "critical": true
+    }
+  },
+  "revenue_tracking": {
+    "sources": [
+      {
+        "service": "sd-ghost-protocol",
+        "metric": "memory_usage_revenue",
+        "unit": "USD/month"
+      },
+      {
+        "service": "agent-banks",
+        "metric": "subscription_revenue",
+        "unit": "USD/month"
+      },
+      {
+        "service": "the-fixer-initiative",
+        "metric": "platform_fees",
+        "unit": "USD/month"
+      }
+    ],
+    "aggregations": {
+      "total_mrr": "sum(all_sources)",
+      "growth_rate": "month_over_month_percentage",
+      "ltv": "average_customer_lifetime_value"
+    }
+  },
+  "alerts": {
+    "service_down": {
+      "threshold": "uptime < 99%",
+      "severity": "critical",
+      "notify": ["email", "slack"]
+    },
+    "high_error_rate": {
+      "threshold": "error_rate > 5%",
+      "severity": "warning",
+      "notify": ["slack"]
+    },
+    "budget_exceeded": {
+      "threshold": "monthly_cost > budget * 0.9",
+      "severity": "warning",
+      "notify": ["email"]
+    }
+  },
+  "cost_tracking": {
+    "infrastructure": {
+      "vps": {
+        "provider": "hostinger",
+        "monthly_cost": 50,
+        "services": ["all"]
+      },
+      "api_costs": {
+        "anthropic": "usage_based",
+        "openai": "usage_based",
+        "elevenlabs": "usage_based"
+      }
+    },
+    "per_service_allocation": {
+      "method": "usage_based",
+      "review_period": "monthly"
+    }
+  }
+}
