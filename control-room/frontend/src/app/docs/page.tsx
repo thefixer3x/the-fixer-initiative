@@ -320,7 +320,7 @@ const apiEndpoints: ApiCategory[] = [
                 description: 'Payment webhook notifications',
                 example: {
                     description: 'Configure this URL in your Paystack dashboard for payment notifications',
-                    url: 'https://your-project.supabase.co/functions/v1/client-api/webhook/payment'
+                    url: 'https://lanonasis.supabase.co/functions/v1/client-api/webhook/payment'
                 }
             },
             {
@@ -329,7 +329,7 @@ const apiEndpoints: ApiCategory[] = [
                 description: 'Transfer webhook notifications',
                 example: {
                     description: 'Configure this URL in your Sayswitch dashboard for transfer notifications',
-                    url: 'https://your-project.supabase.co/functions/v1/client-api/webhook/transfer'
+                    url: 'https://lanonasis.supabase.co/functions/v1/client-api/webhook/transfer'
                 }
             }
         ]
@@ -404,7 +404,7 @@ export default function APIDocumentation() {
                         <Code className="h-5 w-5 text-blue-600 mr-2" />
                         <span className="text-sm font-medium text-blue-900">Base URL:</span>
                         <code className="ml-2 px-2 py-1 bg-blue-100 text-blue-800 rounded text-sm">
-                            https://your-project.supabase.co/functions/v1/client-api
+                            https://lanonasis.supabase.co/functions/v1/client-api
                         </code>
                     </div>
                 </div>

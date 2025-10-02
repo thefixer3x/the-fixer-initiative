@@ -103,7 +103,7 @@ Each repository should have CI/CD that reports status back to The Fixer Initiati
 
 Access the central monitoring dashboard at:
 - **Development**: http://localhost:3000/repos
-- **Production**: https://control.fixer-initiative.com/repos
+- **Production**: https://control.connectionpoint.tech/repos
 
 This dashboard shows:
 - Build status for each repository
