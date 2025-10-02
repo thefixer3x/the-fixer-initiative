@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: Consumer Application / Execution Engine
 - **Purpose**: Personal AI assistant that actually executes commands
-- **API Endpoint**: https://api.connectionpoint.tech/v1/ai/agent-banks
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/ai/agent-banks
 
 ### 💰 Revenue Model
 - **Minor Actions**: $9/month (100 credits)

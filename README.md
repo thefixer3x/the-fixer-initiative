@@ -85,7 +85,7 @@ The Fixer Initiative (This Platform)
 
 ### API Gateway Endpoints
 ```
-https://api.connectionpoint.tech/
+https://dev.connectionpoint.tech/
 ├── /v1/memory/* → SD-Ghost Protocol
 ├── /v1/ai/* → Agent-Banks
 ├── /v1/vendors/* → Vendor Services

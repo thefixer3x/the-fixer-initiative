@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: Infrastructure Service
 - **Purpose**: Persistent memory and data storage for AI applications
-- **API Endpoint**: https://api.connectionpoint.tech/v1/memory
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/memory
 
 ### 💰 Revenue Model
 - **Storage**: $0.001 per KB/month

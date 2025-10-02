@@ -3,7 +3,7 @@
 ## Why Neon for Payment Services?
 
 ### Benefits
-- ✅ **Better domain flexibility** - `api.connectionpoint.tech`
+- ✅ **Better domain flexibility** - `dev.connectionpoint.tech`
 - ✅ **Dedicated backup storage** - Independent from main Supabase
 - ✅ **Audit trail** - Complete payment history
 - ✅ **Performance isolation** - Payment queries don't affect main DB
