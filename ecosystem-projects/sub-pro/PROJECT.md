@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: Consumer SaaS Application
 - **Purpose**: Manage all subscriptions in one place, prevent overdrafts, optimize spending
-- **API Endpoint**: https://api.fixer-initiative.com/v1/apps/sub-pro
+- **API Endpoint**: https://api.connectionpoint.tech/v1/apps/sub-pro
 
 ### 💰 Revenue Model
 - **Free Tier**: Track up to 5 subscriptions

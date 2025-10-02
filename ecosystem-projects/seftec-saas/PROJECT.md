@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: B2B SaaS/PaaS Platform
 - **Purpose**: Enterprise access to all ecosystem APIs, SDKs, and automation features
-- **API Endpoint**: https://api.fixer-initiative.com/v1/platform/saas
+- **API Endpoint**: https://api.connectionpoint.tech/v1/platform/saas
 
 ### 💰 Revenue Model
 - **Developer Tier**: $99/month

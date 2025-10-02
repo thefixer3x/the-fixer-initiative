@@ -31,6 +31,7 @@ interface ApiEndpoint {
         request?: any
         response?: any
         url?: string
+        description?: string
     } | string
 }
 
@@ -472,23 +473,23 @@ export default function APIDocumentation() {
                                                 <div className="mt-4">
                                                     <h4 className="text-sm font-medium text-gray-900 mb-2">Example</h4>
                                                     <div className="space-y-4">
-                                                        {typeof endpoint.example === 'object' && endpoint.example.request && (
+                                                        {typeof endpoint.example === 'object' && endpoint.example && 'request' in endpoint.example && endpoint.example.request && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Request</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                                                                         <code>
-                                                                            {typeof endpoint.example.request === 'string'
-                                                                                ? endpoint.example.request
-                                                                                : JSON.stringify(endpoint.example.request, null, 2)
+                                                                            {typeof (endpoint.example as any).request === 'string'
+                                                                                ? (endpoint.example as any).request
+                                                                                : JSON.stringify((endpoint.example as any).request, null, 2)
                                                                             }
                                                                         </code>
                                                                     </pre>
                                                                     <button
                                                                         onClick={() => copyToClipboard(
-                                                                            typeof endpoint.example.request === 'string'
-                                                                                ? endpoint.example.request
-                                                                                : JSON.stringify(endpoint.example.request, null, 2),
+                                                                            typeof (endpoint.example as any).request === 'string'
+                                                                                ? (endpoint.example as any).request
+                                                                                : JSON.stringify((endpoint.example as any).request, null, 2),
                                                                             `request-${categoryIndex}-${endpointIndex}`
                                                                         )}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
@@ -503,23 +504,23 @@ export default function APIDocumentation() {
                                                             </div>
                                                         )}
 
-                                                        {typeof endpoint.example === 'object' && endpoint.example.response && (
+                                                        {typeof endpoint.example === 'object' && endpoint.example && 'response' in endpoint.example && endpoint.example.response && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Response</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
                                                                         <code>
-                                                                            {typeof endpoint.example.response === 'string'
-                                                                                ? endpoint.example.response
-                                                                                : JSON.stringify(endpoint.example.response, null, 2)
+                                                                            {typeof (endpoint.example as any).response === 'string'
+                                                                                ? (endpoint.example as any).response
+                                                                                : JSON.stringify((endpoint.example as any).response, null, 2)
                                                                             }
                                                                         </code>
                                                                     </pre>
                                                                     <button
                                                                         onClick={() => copyToClipboard(
-                                                                            typeof endpoint.example.response === 'string'
-                                                                                ? endpoint.example.response
-                                                                                : JSON.stringify(endpoint.example.response, null, 2),
+                                                                            typeof (endpoint.example as any).response === 'string'
+                                                                                ? (endpoint.example as any).response
+                                                                                : JSON.stringify((endpoint.example as any).response, null, 2),
                                                                             `response-${categoryIndex}-${endpointIndex}`
                                                                         )}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
@@ -534,15 +535,15 @@ export default function APIDocumentation() {
                                                             </div>
                                                         )}
 
-                                                        {typeof endpoint.example === 'object' && endpoint.example.url && (
+                                                        {typeof endpoint.example === 'object' && endpoint.example && 'url' in endpoint.example && endpoint.example.url && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Webhook URL</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                                                                        <code>{endpoint.example.url}</code>
+                                                                        <code>{(endpoint.example as any).url}</code>
                                                                     </pre>
                                                                     <button
-                                                                        onClick={() => copyToClipboard(endpoint.example.url, `url-${categoryIndex}-${endpointIndex}`)}
+                                                                        onClick={() => copyToClipboard((endpoint.example as any).url, `url-${categoryIndex}-${endpointIndex}`)}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
                                                                     >
                                                                         {copiedCode === `url-${categoryIndex}-${endpointIndex}` ? (
