@@ -1,0 +1,14 @@
+{
+  "builds": [
+    {
+      "src": "control-room/frontend/package.json",
+      "use": "@vercel/next"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "control-room/frontend/$1"
+    }
+  ]
+}
