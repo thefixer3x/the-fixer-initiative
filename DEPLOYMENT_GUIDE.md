@@ -27,26 +27,26 @@
 cd /Users/onasis/dev-hub/the-fixer-initiative/control-room
 
 # Deploy client API function
-supabase functions deploy client-api --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy client-api --project-ref your-project-reference
 
 # Deploy payment integration
-supabase functions deploy paystack-integration --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy paystack-integration --project-ref your-project-reference
 
 # Deploy transfer integration
-supabase functions deploy sayswitch-integration --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy sayswitch-integration --project-ref your-project-reference
 
 # Deploy OpenAI assistant
-supabase functions deploy openai-assistant --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy openai-assistant --project-ref your-project-reference
 ```
 
 ### **1.2 Run Database Migrations**
 
 ```bash
 # Apply all migrations to production
-supabase db push --project-ref mxtsdgkwzjzlttpotole
+supabase db push --project-ref your-project-reference
 
 # Verify migration status
-supabase migration list --project-ref mxtsdgkwzjzlttpotole
+supabase migration list --project-ref your-project-reference
 ```
 
 ### **1.3 Configure Environment Variables**
@@ -122,13 +122,13 @@ npx netlify deploy --prod --dir=out
 ### **3.1 Paystack Webhooks**
 
 Configure in Paystack Dashboard:
-- **Webhook URL**: `https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/paystack-integration/webhook`
+- **Webhook URL**: `https://your-project-reference.supabase.co/functions/v1/paystack-integration/webhook`
 - **Events**: `charge.success`, `charge.failed`, `transfer.success`, `transfer.failed`
 
 ### **3.2 Sayswitch Webhooks**
 
 Configure in Sayswitch Dashboard:
-- **Webhook URL**: `https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/sayswitch-integration/webhook`
+- **Webhook URL**: `https://your-project-reference.supabase.co/functions/v1/sayswitch-integration/webhook`
 - **Events**: `transfer.success`, `transfer.failed`, `transfer.pending`
 
 ---
@@ -139,10 +139,10 @@ Configure in Sayswitch Dashboard:
 
 ```bash
 # Test health check
-curl https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/health
+curl https://your-project-reference.supabase.co/functions/v1/client-api/health
 
 # Test payment initialization
-curl -X POST https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/payments/initialize \
+curl -X POST https://your-project-reference.supabase.co/functions/v1/client-api/payments/initialize \
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"email": "test@example.com", "amount": 5000, "currency": "NGN"}'
@@ -164,10 +164,10 @@ curl -X POST https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/pa
 
 ```bash
 # Monitor Supabase functions
-supabase functions logs --project-ref mxtsdgkwzjzlttpotole
+supabase functions logs --project-ref your-project-reference
 
 # Monitor database performance
-supabase db logs --project-ref mxtsdgkwzjzlttpotole
+supabase db logs --project-ref your-project-reference
 ```
 
 ### **5.2 Set Up Alerts**
@@ -183,14 +183,14 @@ Configure alerts for:
 ## 📊 **Production URLs**
 
 ### **Supabase Project**
-- **Dashboard**: https://supabase.com/dashboard/project/mxtsdgkwzjzlttpotole
-- **API URL**: https://mxtsdgkwzjzlttpotole.supabase.co
-- **Studio**: https://mxtsdgkwzjzlttpotole.supabase.co/studio
+- **Dashboard**: https://supabase.com/dashboard/project/your-project-reference
+- **API URL**: https://your-project-reference.supabase.co
+- **Studio**: https://your-project-reference.supabase.co/studio
 
 ### **Edge Functions**
-- **Client API**: https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api
-- **Paystack Integration**: https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/paystack-integration
-- **Sayswitch Integration**: https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/sayswitch-integration
+- **Client API**: https://your-project-reference.supabase.co/functions/v1/client-api
+- **Paystack Integration**: https://your-project-reference.supabase.co/functions/v1/paystack-integration
+- **Sayswitch Integration**: https://your-project-reference.supabase.co/functions/v1/sayswitch-integration
 
 ### **Frontend**
 - **Production URL**: [Your Vercel/Netlify URL]
@@ -205,10 +205,10 @@ Configure alerts for:
 1. **Function Deployment Fails**
    ```bash
    # Check function logs
-   supabase functions logs client-api --project-ref mxtsdgkwzjzlttpotole
+   supabase functions logs client-api --project-ref your-project-reference
    
    # Redeploy with verbose output
-   supabase functions deploy client-api --project-ref mxtsdgkwzjzlttpotole --debug
+   supabase functions deploy client-api --project-ref your-project-reference --debug
    ```
 
 2. **Environment Variables Not Working**
@@ -219,10 +219,10 @@ Configure alerts for:
 3. **Database Connection Issues**
    ```bash
    # Check database status
-   supabase db status --project-ref mxtsdgkwzjzlttpotole
+   supabase db status --project-ref your-project-reference
    
    # Reset database if needed
-   supabase db reset --project-ref mxtsdgkwzjzlttpotole
+   supabase db reset --project-ref your-project-reference
    ```
 
 4. **Frontend Build Errors**
