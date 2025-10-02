@@ -4,17 +4,18 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
-import { 
-  Users, 
-  CreditCard, 
-  DollarSign, 
-  TrendingUp, 
+import {
+  Users,
+  CreditCard,
+  DollarSign,
+  TrendingUp,
   Activity,
   Clock,
   CheckCircle,
   XCircle
 } from 'lucide-react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'
+import { ecosystemAPI, type AggregatedMetrics } from '@/lib/ecosystem-api'
 
 interface DashboardMetrics {
   totalClients: number
@@ -49,6 +50,13 @@ const mockData = {
     { name: 'Payments', value: 65, color: '#3B82F6' },
     { name: 'Transfers', value: 35, color: '#10B981' }
   ],
+  clientUsage: [
+    { client: 'Acme Corporation', requests: 4500, revenue: 12000, growth: 15.2 },
+    { client: 'TechStart Inc', requests: 3200, revenue: 8500, growth: 8.7 },
+    { client: 'Global Enterprises', requests: 2800, revenue: 15000, growth: -2.1 },
+    { client: 'StartupXYZ', requests: 1800, revenue: 4200, growth: 25.3 },
+    { client: 'FinanceCorp', requests: 2100, revenue: 6800, growth: 12.8 }
+  ],
   recentTransactions: [
     { id: '1', client: 'Acme Corp', type: 'Payment', amount: 2500, status: 'success', time: '2 min ago' },
     { id: '2', client: 'TechStart', type: 'Transfer', amount: 5000, status: 'pending', time: '5 min ago' },
@@ -60,13 +68,46 @@ const mockData = {
 export default function Dashboard() {
   const { user, loading } = useAuth()
   const router = useRouter()
-  const [metrics, setMetrics] = useState<DashboardMetrics>(mockData.metrics)
+  const [metrics, setMetrics] = useState<AggregatedMetrics | null>(null)
+  const [loadingMetrics, setLoadingMetrics] = useState(true)
+  const [transactionTrend, setTransactionTrend] = useState(mockData.transactionTrend)
+  const [clientUsage, setClientUsage] = useState(mockData.clientUsage)
 
   useEffect(() => {
     if (!loading && !user) {
       router.push('/login')
     }
   }, [user, loading, router])
+
+  useEffect(() => {
+    const loadLiveData = async () => {
+      try {
+        setLoadingMetrics(true)
+        const [aggregatedMetrics, trendData, usageData] = await Promise.all([
+          ecosystemAPI.getAggregatedMetrics(),
+          ecosystemAPI.getTransactionTrend(7),
+          ecosystemAPI.getClientUsage()
+        ])
+
+        setMetrics(aggregatedMetrics)
+        setTransactionTrend(trendData)
+        setClientUsage(usageData)
+      } catch (error) {
+        console.error('Failed to load live data:', error)
+        // Fallback to mock data
+        setMetrics(mockData.metrics as any)
+      } finally {
+        setLoadingMetrics(false)
+      }
+    }
+
+    if (user) {
+      loadLiveData()
+      // Refresh data every 30 seconds
+      const interval = setInterval(loadLiveData, 30000)
+      return () => clearInterval(interval)
+    }
+  }, [user])
 
   if (loading) {
     return (
@@ -99,9 +140,8 @@ export default function Dashboard() {
               <dd className="flex items-baseline">
                 <div className="text-2xl font-semibold text-gray-900">{value}</div>
                 {change && (
-                  <div className={`ml-2 flex items-baseline text-sm font-semibold ${
-                    change.startsWith('+') ? 'text-green-600' : 'text-red-600'
-                  }`}>
+                  <div className={`ml-2 flex items-baseline text-sm font-semibold ${change.startsWith('+') ? 'text-green-600' : 'text-red-600'
+                    }`}>
                     {change}
                   </div>
                 )}
@@ -128,28 +168,28 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total Clients"
-            value={metrics.totalClients}
+            value={loadingMetrics ? '...' : metrics?.totalClients || 0}
             change="+2 this month"
             icon={Users}
             color="blue"
           />
           <StatCard
             title="Active Clients"
-            value={metrics.activeClients}
+            value={loadingMetrics ? '...' : metrics?.activeClients || 0}
             change="+1 this week"
             icon={Activity}
             color="green"
           />
           <StatCard
             title="Total Transactions"
-            value={metrics.totalTransactions.toLocaleString()}
+            value={loadingMetrics ? '...' : (metrics?.totalTransactions || 0).toLocaleString()}
             change="+12.5%"
             icon={CreditCard}
             color="purple"
           />
           <StatCard
             title="Total Revenue"
-            value={`$${metrics.totalRevenue.toLocaleString()}`}
+            value={loadingMetrics ? '...' : `$${(metrics?.totalRevenue || 0).toLocaleString()}`}
             change="+8.2%"
             icon={DollarSign}
             color="yellow"
@@ -162,7 +202,7 @@ export default function Dashboard() {
           <div className="bg-white p-6 rounded-lg shadow">
             <h3 className="text-lg font-medium text-gray-900 mb-4">Transaction Trend (7 days)</h3>
             <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={mockData.transactionTrend}>
+              <LineChart data={transactionTrend}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="date" />
                 <YAxis />
@@ -212,7 +252,9 @@ export default function Dashboard() {
               <CheckCircle className="h-8 w-8 text-green-600" />
               <div className="ml-4">
                 <h3 className="text-lg font-medium text-gray-900">Success Rate</h3>
-                <p className="text-3xl font-bold text-green-600">{metrics.successRate}%</p>
+                <p className="text-3xl font-bold text-green-600">
+                  {loadingMetrics ? '...' : `${(metrics?.successRate || 0).toFixed(1)}%`}
+                </p>
                 <p className="text-sm text-gray-500">Last 30 days</p>
               </div>
             </div>
@@ -223,7 +265,9 @@ export default function Dashboard() {
               <Clock className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
                 <h3 className="text-lg font-medium text-gray-900">Avg Response Time</h3>
-                <p className="text-3xl font-bold text-blue-600">{metrics.avgResponseTime}ms</p>
+                <p className="text-3xl font-bold text-blue-600">
+                  {loadingMetrics ? '...' : `${Math.round(metrics?.avgResponseTime || 0)}ms`}
+                </p>
                 <p className="text-sm text-gray-500">API response time</p>
               </div>
             </div>
@@ -234,7 +278,9 @@ export default function Dashboard() {
               <TrendingUp className="h-8 w-8 text-purple-600" />
               <div className="ml-4">
                 <h3 className="text-lg font-medium text-gray-900">Monthly Growth</h3>
-                <p className="text-3xl font-bold text-purple-600">+{metrics.monthlyGrowth}%</p>
+                <p className="text-3xl font-bold text-purple-600">
+                  {loadingMetrics ? '...' : `+${(metrics?.monthlyGrowth || 0).toFixed(1)}%`}
+                </p>
                 <p className="text-sm text-gray-500">vs last month</p>
               </div>
             </div>
@@ -280,13 +326,12 @@ export default function Dashboard() {
                       ${transaction.amount.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        transaction.status === 'success' 
-                          ? 'bg-green-100 text-green-800'
-                          : transaction.status === 'pending'
+                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${transaction.status === 'success'
+                        ? 'bg-green-100 text-green-800'
+                        : transaction.status === 'pending'
                           ? 'bg-yellow-100 text-yellow-800'
                           : 'bg-red-100 text-red-800'
-                      }`}>
+                        }`}>
                         {transaction.status}
                       </span>
                     </td>

@@ -20,10 +20,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // For development, create a mock user
-    if (process.env.NODE_ENV === 'development') {
+    // Check if we should use mock auth (development or production without real auth setup)
+    const useMockAuth = process.env.NODE_ENV === 'development' || 
+                       process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true' ||
+                       !process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('supabase.co')
+
+    if (useMockAuth) {
       const mockUser = {
-        id: 'dev-user-123',
+        id: 'admin-user-123',
         email: 'admin@fixer-initiative.com',
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
@@ -72,9 +76,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    // For development, always succeed
-    if (process.env.NODE_ENV === 'development') {
-      return { error: null }
+    // Check if we should use mock auth
+    const useMockAuth = process.env.NODE_ENV === 'development' || 
+                       process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true' ||
+                       !process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('supabase.co')
+
+    if (useMockAuth) {
+      // Simple admin login for demo purposes
+      if (email === 'admin@fixer-initiative.com' && password === 'admin123') {
+        return { error: null }
+      } else {
+        return { error: { message: 'Invalid credentials. Use admin@fixer-initiative.com / admin123' } }
+      }
     }
 
     const { error } = await supabase.auth.signInWithPassword({
@@ -85,7 +98,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signOut = async () => {
-    if (process.env.NODE_ENV === 'development') {
+    // Check if we should use mock auth
+    const useMockAuth = process.env.NODE_ENV === 'development' || 
+                       process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true' ||
+                       !process.env.NEXT_PUBLIC_SUPABASE_URL?.includes('supabase.co')
+
+    if (useMockAuth) {
       setUser(null)
       setSession(null)
       return
