@@ -22,12 +22,12 @@
 ### **1.1 Supabase Production Configuration**
 ```bash
 # Production Supabase Project Details
-Project: the-fixer-initiative
-Reference: mxtsdgkwzjzlttpotole
-Region: West EU (London)
-API URL: https://mxtsdgkwzjzlttpotole.supabase.co
-Anon Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14dHNkZ2t3emp6bHR0cG90b2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDUyNTksImV4cCI6MjA2MjY4MTI1OX0.2KM8JxBEsqQidSvjhuLs8HCX-7g-q6YNswedQ5ZYq3g
-Service Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14dHNkZ2t3emp6bHR0cG90b2xlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NzEwNTI1OSwiZXhwIjoyMDYyNjgxMjU5fQ.Aoob84MEgNV-viFugZHWKodJUjn4JOQNzcSQ57stJFU
+Project: your-project-name
+Reference: your-project-reference
+Region: Your Region
+API URL: https://your-project-reference.supabase.co
+Anon Key: your_supabase_anon_key
+Service Key: your_supabase_service_role_key
 ```
 
 ### **1.2 Neon Database Setup**
@@ -39,9 +39,9 @@ Service Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZi
 ### **1.3 Environment Configuration**
 ```bash
 # Production .env.production
-NEXT_PUBLIC_SUPABASE_URL=https://mxtsdgkwzjzlttpotole.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+NEXT_PUBLIC_SUPABASE_URL=https://your-project-reference.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 
 # Neon Database
 NEON_DATABASE_URL=postgresql://...
@@ -158,13 +158,13 @@ const ecosystemAPIs = {
 ### **4.1 Supabase Edge Functions Deployment**
 ```bash
 # Deploy client API function
-supabase functions deploy client-api --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy client-api --project-ref your-project-reference
 
 # Deploy payment integration
-supabase functions deploy paystack-integration --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy paystack-integration --project-ref your-project-reference
 
 # Deploy transfer integration
-supabase functions deploy sayswitch-integration --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy sayswitch-integration --project-ref your-project-reference
 ```
 
 ### **4.2 Frontend Deployment**
