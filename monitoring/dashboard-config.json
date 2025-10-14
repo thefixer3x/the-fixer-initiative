@@ -12,7 +12,7 @@
       "status": "active",
       "monitors": {
         "uptime": true,
-        "api_health": "https://api.fixer-initiative.com/v1/memory/health",
+        "api_health": "https://dev.connectionpoint.tech/v1/memory/health",
         "usage_metrics": true,
         "error_rate": true
       }
@@ -24,7 +24,7 @@
       "status": "active",
       "monitors": {
         "uptime": true,
-        "api_health": "https://api.fixer-initiative.com/v1/ai/agent-banks/health",
+        "api_health": "https://dev.connectionpoint.tech/v1/ai/agent-banks/health",
         "execution_success_rate": true,
         "user_sessions": true
       }
@@ -44,31 +44,50 @@
   ],
   "service_dependencies": {
     "agent-banks": {
-      "depends_on": ["sd-ghost-protocol", "the-fixer-initiative"],
+      "depends_on": [
+        "sd-ghost-protocol",
+        "the-fixer-initiative"
+      ],
       "critical": true
     },
     "sub-pro": {
-      "depends_on": ["sd-ghost-protocol", "agent-banks"],
+      "depends_on": [
+        "sd-ghost-protocol",
+        "agent-banks"
+      ],
       "critical": false
     },
     "task-manager": {
-      "depends_on": ["agent-banks", "sd-ghost-protocol"],
+      "depends_on": [
+        "agent-banks",
+        "sd-ghost-protocol"
+      ],
       "critical": false
     },
     "seftechub": {
-      "depends_on": ["sd-ghost-protocol"],
+      "depends_on": [
+        "sd-ghost-protocol"
+      ],
       "critical": false
     },
     "seftec-shop": {
-      "depends_on": ["seftechub", "agent-banks", "sd-ghost-protocol"],
+      "depends_on": [
+        "seftechub",
+        "agent-banks",
+        "sd-ghost-protocol"
+      ],
       "critical": false
     },
     "logistics": {
-      "depends_on": ["sd-ghost-protocol"],
+      "depends_on": [
+        "sd-ghost-protocol"
+      ],
       "critical": false
     },
     "seftec-saas": {
-      "depends_on": ["all"],
+      "depends_on": [
+        "all"
+      ],
       "critical": true
     }
   },
@@ -100,17 +119,24 @@
     "service_down": {
       "threshold": "uptime < 99%",
       "severity": "critical",
-      "notify": ["email", "slack"]
+      "notify": [
+        "email",
+        "slack"
+      ]
     },
     "high_error_rate": {
       "threshold": "error_rate > 5%",
       "severity": "warning",
-      "notify": ["slack"]
+      "notify": [
+        "slack"
+      ]
     },
     "budget_exceeded": {
       "threshold": "monthly_cost > budget * 0.9",
       "severity": "warning",
-      "notify": ["email"]
+      "notify": [
+        "email"
+      ]
     }
   },
   "cost_tracking": {
@@ -118,7 +144,9 @@
       "vps": {
         "provider": "hostinger",
         "monthly_cost": 50,
-        "services": ["all"]
+        "services": [
+          "all"
+        ]
       },
       "api_costs": {
         "anthropic": "usage_based",

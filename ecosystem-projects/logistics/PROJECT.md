@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: B2B SaaS Platform
 - **Purpose**: Complete fleet management, logistics, and delivery orchestration
-- **API Endpoint**: https://api.fixer-initiative.com/v1/apps/logistics
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/apps/logistics
 
 ### 💰 Revenue Model
 - **SaaS Tiers**:

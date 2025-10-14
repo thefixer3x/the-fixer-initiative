@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: Productivity SaaS Application
 - **Purpose**: AI-powered task management, meeting notes, goal tracking
-- **API Endpoint**: https://api.fixer-initiative.com/v1/apps/task-manager
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/apps/task-manager
 
 ### 💰 Revenue Model
 - **Personal**: $9.99/month (individual)

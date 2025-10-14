@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: B2B Marketplace Platform
 - **Purpose**: Help SMEs scale and grow internationally
-- **API Endpoint**: https://api.fixer-initiative.com/v1/apps/seftechub
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/apps/seftechub
 
 ### 💰 Revenue Model
 - **Transaction Fees**: 2.5% on successful trades

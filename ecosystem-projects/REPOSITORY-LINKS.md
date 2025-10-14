@@ -94,7 +94,7 @@ Each repository should have CI/CD that reports status back to The Fixer Initiati
 # In each repo's .github/workflows/status.yml
 - name: Report Status to Aggregator
   run: |
-    curl -X POST https://api.fixer-initiative.com/v1/repo-status \
+    curl -X POST https://dev.connectionpoint.tech/v1/repo-status \
       -H "Authorization: Bearer ${{ secrets.FIXER_API_KEY }}" \
       -d '{"repo": "${{ github.repository }}", "status": "${{ job.status }}"}'
 ```
@@ -103,7 +103,7 @@ Each repository should have CI/CD that reports status back to The Fixer Initiati
 
 Access the central monitoring dashboard at:
 - **Development**: http://localhost:3000/repos
-- **Production**: https://control.fixer-initiative.com/repos
+- **Production**: https://control.connectionpoint.tech/repos
 
 This dashboard shows:
 - Build status for each repository

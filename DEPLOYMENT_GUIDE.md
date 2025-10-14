@@ -1,17 +1,158 @@
-# Onasis Gateway with CaaS Deployment Guide
+# 🚀 Comprehensive Deployment Guide - The Fixer Initiative
 
 ## Overview
-This guide covers deploying the unified Credit-as-a-Service (CaaS) integration to the Onasis Gateway on VPS with the new `api.connectionpoint.tech` domain.
 
-## Prerequisites
+This guide provides comprehensive instructions for deploying the two core components of The Fixer Initiative:
+
+1.  **The Control Room**: The frontend dashboard and Supabase backend (edge functions, database).
+2.  **Onasis Gateway & CaaS**: The backend API gateway, MCP server, and Credit-as-a-Service module running on a VPS.
+
+---
+
+## 🎯 Part 1: Control Room Deployment (Supabase & Vercel/Netlify)
+
+This section covers the deployment of the frontend application and its associated Supabase services.
+
+### 📋 Pre-Deployment Checklist
+
+#### ✅ **Completed**
+- [x] Frontend application built and tested
+- [x] Database schema created and migrated
+- [x] Edge functions developed
+- [x] TypeScript errors resolved
+- [x] Production Supabase credentials obtained
+- [x] Environment configuration created
+
+#### 🔄 **In Progress**
+- [ ] Deploy Supabase edge functions
+- [ ] Configure production environment
+- [ ] Set up webhook endpoints
+- [ ] Deploy frontend to production
+
+---
+
+### **1.1 Supabase Production Setup**
+
+#### **1.1.1 Deploy Edge Functions**
+
+```bash
+# Navigate to control room directory
+cd /Users/onasis/dev-hub/the-fixer-initiative/control-room
+
+# Deploy client API function
+supabase functions deploy client-api --project-ref mxtsdgkwzjzlttpotole
+
+# Deploy payment integration
+supabase functions deploy paystack-integration --project-ref mxtsdgkwzjzlttpotole
+
+# Deploy transfer integration
+supabase functions deploy sayswitch-integration --project-ref mxtsdgkwzjzlttpotole
+
+# Deploy OpenAI assistant
+supabase functions deploy openai-assistant --project-ref mxtsdgkwzjzlttpotole
+```
+
+#### **1.1.2 Run Database Migrations**
+
+```bash
+# Apply all migrations to production
+supabase db push --project-ref mxtsdgkwzjzlttpotole
+
+# Verify migration status
+supabase migration list --project-ref mxtsdgkwzjzlttpotole
+```
+
+#### **1.1.3 Configure Environment Variables**
+
+Set the following environment variables in Supabase Dashboard:
+
+```bash
+# In Supabase Dashboard > Settings > Edge Functions > Environment Variables
+
+# Payment Providers
+PAYSTACK_SECRET_KEY=sk_live_your_actual_paystack_key
+PAYSTACK_WEBHOOK_SECRET=your_actual_webhook_secret
+SAYSWITCH_API_KEY=your_actual_sayswitch_key
+SAYSWITCH_BASE_URL=https://api.sayswitch.com/v1
+SAYSWITCH_WEBHOOK_SECRET=your_actual_webhook_secret
+
+# Internal API Key
+INTERNAL_VENDOR_API_KEY=pk_live_INTERNAL_keyid.sk_live_secret
+
+# Ecosystem APIs
+SD_GHOST_API_URL=https://api.sd-ghost.protocol/v1
+AGENT_BANKS_API_URL=https://api.agent-banks.com/v1
+VORTEXCORE_API_URL=https://api.vortexcore.app/v1
+SEFTEC_STORE_API_URL=https://api.seftec.store/v1
+```
+
+---
+
+### **1.2 Frontend Deployment**
+
+#### **1.2.1 Deploy to Vercel (Recommended)**
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Navigate to frontend directory
+cd /Users/onasis/dev-hub/the-fixer-initiative/control-room/frontend
+
+# Deploy to Vercel
+vercel --prod
+
+# Set environment variables in Vercel dashboard
+vercel env add NEXT_PUBLIC_SUPABASE_URL
+vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
+vercel env add SUPABASE_SERVICE_ROLE_KEY
+# ... (add all other required environment variables)
+```
+
+#### **1.2.2 Alternative: Deploy to Netlify**
+
+```bash
+# Build the application
+npm run build
+
+# Deploy to Netlify
+npx netlify deploy --prod --dir=out
+```
+
+---
+
+### **1.3 Webhook Configuration**
+
+#### **1.3.1 Paystack Webhooks**
+
+Configure in Paystack Dashboard:
+- **Webhook URL**: `https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/paystack-integration/webhook`
+- **Events**: `charge.success`, `charge.failed`, `transfer.success`, `transfer.failed`
+
+#### **1.3.2 Sayswitch Webhooks**
+
+Configure in Sayswitch Dashboard:
+- **Webhook URL**: `https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/sayswitch-integration/webhook`
+- **Events**: `transfer.success`, `transfer.failed`, `transfer.pending`
+
+---
+---
+
+## 🎯 Part 2: Onasis Gateway & CaaS Deployment (VPS)
+
+This section covers deploying the unified Credit-as-a-Service (CaaS) integration to the Onasis Gateway on the VPS.
+
+### **2.1 Prerequisites**
 - ✅ Domain purchased: `connectionpoint.tech` 
 - ✅ DNS A record created: `api.connectionpoint.tech` → `168.231.74.29`
 - ✅ VPS access: `ssh -p 2222 root@168.231.74.29`
 - ✅ Nginx configurations ready for both domains
 
-## Deployment Steps
+---
 
-### 1. Deploy Nginx Configurations
+### **2.2 Deployment Steps**
+
+#### **2.2.1 Deploy Nginx Configurations**
 
 From your local machine, run the deployment script:
 
@@ -30,7 +171,7 @@ The script will:
 - Test nginx configuration
 - Reload nginx service
 
-### 2. Deploy CaaS Integration Files
+#### **2.2.2 Deploy CaaS Integration Files**
 
 SSH into the VPS and deploy the integration files:
 
@@ -55,7 +196,7 @@ pm2 restart onasis-gateway
 pm2 restart mcp-server
 ```
 
-### 3. Setup SSL Certificates
+#### **2.2.3 Setup SSL Certificates**
 
 From your local machine:
 
@@ -70,7 +211,11 @@ This will:
 - Generate SSL certificates for `api.vortexcore.app` (if config exists)
 - Configure HTTPS redirects
 
-### 4. Verify Deployment
+---
+
+### **2.3 Verification and Testing**
+
+#### **2.3.1 Verify Deployment**
 
 Check deployment status:
 
@@ -89,92 +234,8 @@ curl -I http://api.connectionpoint.tech/mcp
 curl -I http://api.connectionpoint.tech/api/credit
 ```
 
-## File Structure on VPS
+#### **2.3.2 Test CaaS Integration**
 
-After deployment, the VPS should have:
-
-```
-/etc/nginx/sites-available/
-├── api-connectionpoint       # Primary domain config
-└── api-vortexcore           # Legacy/backup domain config
-
-/etc/nginx/sites-enabled/
-├── api-connectionpoint -> ../sites-available/api-connectionpoint
-└── api-vortexcore -> ../sites-available/api-vortexcore
-
-/path/to/onasis-gateway/
-├── database/migrations/001_add_credit_schema.sql
-├── services/credit-as-a-service/
-│   ├── client.js
-│   ├── credit-as-a-service.json
-│   ├── webhooks.js
-│   └── test.js
-└── mcp-server/
-    ├── tools/credit/index.js
-    └── types/credit.d.ts
-```
-
-## Services Configuration
-
-### Port Allocation
-- **Port 3000**: Onasis Gateway (main API)
-- **Port 3001**: MCP Server
-- **Port 80**: Nginx HTTP
-- **Port 443**: Nginx HTTPS
-
-### Domain Routing
-- `api.connectionpoint.tech` → Primary domain (nginx → port 3000)
-- `api.vortexcore.app` → Legacy domain (nginx → port 3000)
-- Both domains support:
-  - `/` → Main API Gateway
-  - `/mcp` → MCP Server (port 3001)
-  - `/api/credit` → Credit-as-a-Service endpoints
-  - `/webhooks` → Payment webhooks
-  - `/health` → Health checks
-
-## Environment Variables
-
-Ensure these are set on the VPS:
-
-```bash
-# Add to /path/to/onasis-gateway/.env
-DOMAIN_API_PRIMARY=https://api.connectionpoint.tech
-DOMAIN_API_LEGACY=https://api.vortexcore.app
-VPS_IP=168.231.74.29
-
-# Database (should already exist)
-DATABASE_URL=postgresql://username:password@localhost:5432/onasis_gateway
-```
-
-## Credit-as-a-Service Features
-
-After deployment, the following CaaS tools will be available via MCP:
-
-### Application Management
-- `credit_submit_application`
-- `credit_get_applications`
-- `credit_get_application`
-- `credit_update_application_status`
-
-### Provider Management
-- `credit_register_provider`
-- `credit_get_providers`
-- `credit_submit_provider_bid`
-
-### Transaction Processing
-- `credit_process_transaction`
-
-### Analytics & Scoring
-- `credit_perform_credit_check`
-- `credit_get_analytics`
-- `credit_provider_performance`
-
-### Health Monitoring
-- `credit_health_check`
-
-## Testing the Integration
-
-### 1. Database Schema Test
 ```bash
 # Connect to database
 psql -U postgres -d onasis_gateway
@@ -186,109 +247,54 @@ psql -U postgres -d onasis_gateway
 SELECT * FROM onasis.adapters WHERE adapter_code = 'CAAS';
 ```
 
-### 2. API Endpoint Test
-```bash
-# Test main gateway
-curl https://api.connectionpoint.tech/health
+---
+---
 
-# Test MCP server
-curl https://api.connectionpoint.tech/mcp
+## 🎯 Part 3: Production Testing & Monitoring
 
-# Test credit health check
-curl -X POST https://api.connectionpoint.tech/api/credit/health
-```
+After deploying both the Control Room and the Gateway, perform these final checks.
 
-### 3. MCP Tools Test
-Using an MCP client, test the credit tools:
+### **3.1 End-to-End Testing**
 
-```javascript
-// Example MCP client test
-const response = await mcpClient.call('credit_health_check', {});
-console.log(response);
-```
+1.  **Test Frontend**: Visit your deployed frontend URL and test all dashboard features.
+2.  **Test API Endpoints**:
+    ```bash
+    # Test health check from Supabase function
+    curl https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/health
 
-## Monitoring & Maintenance
+    # Test payment initialization through Supabase function
+    curl -X POST https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/payments/initialize \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"email": "test@example.com", "amount": 5000, "currency": "NGN"}'
+    ```
 
-### Log Files
-- Nginx: `/var/log/nginx/access.log`, `/var/log/nginx/error.log`
-- Onasis Gateway: Check PM2 logs
-- Database: PostgreSQL logs
-
-### Health Checks
-- API Gateway: `https://api.connectionpoint.tech/health`
-- Credit Service: `https://api.connectionpoint.tech/api/credit/health`
-- MCP Server: `https://api.connectionpoint.tech/mcp`
-
-### SSL Certificate Renewal
-Certificates auto-renew via certbot cron job. Manual renewal:
+### **3.2 Monitoring & Maintenance**
 
 ```bash
-certbot renew --dry-run
+# Monitor Supabase functions
+supabase functions logs --project-ref mxtsdgkwzjzlttpotole
+
+# Monitor VPS services
+ssh -p 2222 root@168.231.74.29 "pm2 logs"
 ```
-
-## Rollback Plan
-
-If issues occur:
-
-1. **Nginx Issues**:
-   ```bash
-   # Restore from backup
-   ./deploy-nginx-configs.sh backup
-   # Then manually restore from /root/nginx-backup-*
-   ```
-
-2. **Database Issues**:
-   ```bash
-   # Rollback migration (if needed)
-   # Manual SQL commands to drop credit schema
-   ```
-
-3. **Service Issues**:
-   ```bash
-   # Restart services
-   pm2 restart all
-   systemctl restart nginx
-   ```
-
-## Support & Troubleshooting
-
-### Common Issues
-
-1. **DNS Not Resolving**:
-   - Wait 5-10 minutes for DNS propagation
-   - Check: `dig api.connectionpoint.tech`
-
-2. **SSL Certificate Issues**:
-   - Ensure domains resolve before running certbot
-   - Check nginx configuration syntax
-
-3. **Database Connection Issues**:
-   - Verify PostgreSQL is running
-   - Check connection credentials
-
-### Getting Help
-
-- Check logs: `./deploy-nginx-configs.sh status`
-- Test configuration: `nginx -t`
-- Monitor services: `pm2 status`
-
-## Completion Checklist
-
-- [ ] DNS records configured
-- [ ] Nginx configurations deployed
-- [ ] SSL certificates installed
-- [ ] Database migration applied
-- [ ] Services restarted
-- [ ] API endpoints responding
-- [ ] MCP tools accessible
-- [ ] Credit service operational
-- [ ] Both domains working
-- [ ] Health checks passing
 
 ---
 
-**Next Steps**: After successful deployment, you can:
-1. Configure payment gateway integrations
-2. Set up monitoring and alerting
-3. Implement additional credit providers
-4. Scale the infrastructure as needed
+## 📊 **Production URLs**
+
+### **Supabase Project**
+- **Dashboard**: https://supabase.com/dashboard/project/mxtsdgkwzjzlttpotole
+- **API URL**: https://mxtsdgkwzjzlttpotole.supabase.co
+
+### **Gateway & CaaS API**
+- **Primary Domain**: `https://api.connectionpoint.tech`
+
+### **Frontend**
+- **Production URL**: [Your Vercel/Netlify URL]
+
+---
+
+## 🎉 **Deployment Complete!**
+
+Your Fixer Initiative Control Room and Onasis Gateway are now deployed and ready to manage your ecosystem! 🚀

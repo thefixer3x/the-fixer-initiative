@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: Consumer Application / Execution Engine
 - **Purpose**: Personal AI assistant that actually executes commands
-- **API Endpoint**: https://api.fixer-initiative.com/v1/ai/agent-banks
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/ai/agent-banks
 
 ### 💰 Revenue Model
 - **Minor Actions**: $9/month (100 credits)
@@ -47,7 +47,7 @@ Growth Rate: +25% MoM
 
 ### 📋 Integration Guide
 ```python
-from fixer_initiative import AgentBanksClient
+from connectionpoint import AgentBanksClient
 
 client = AgentBanksClient(api_key="YOUR_KEY")
 result = await client.execute_command(
