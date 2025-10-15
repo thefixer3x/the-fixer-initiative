@@ -40,26 +40,26 @@ This section covers the deployment of the frontend application and its associate
 cd /Users/onasis/dev-hub/the-fixer-initiative/control-room
 
 # Deploy client API function
-supabase functions deploy client-api --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy client-api --project-ref your-project-reference
 
 # Deploy payment integration
-supabase functions deploy paystack-integration --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy paystack-integration --project-ref your-project-reference
 
 # Deploy transfer integration
-supabase functions deploy sayswitch-integration --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy sayswitch-integration --project-ref your-project-reference
 
 # Deploy OpenAI assistant
-supabase functions deploy openai-assistant --project-ref mxtsdgkwzjzlttpotole
+supabase functions deploy openai-assistant --project-ref your-project-reference
 ```
 
 #### **1.1.2 Run Database Migrations**
 
 ```bash
 # Apply all migrations to production
-supabase db push --project-ref mxtsdgkwzjzlttpotole
+supabase db push --project-ref your-project-reference
 
 # Verify migration status
-supabase migration list --project-ref mxtsdgkwzjzlttpotole
+supabase migration list --project-ref your-project-reference
 ```
 
 #### **1.1.3 Configure Environment Variables**
@@ -126,13 +126,13 @@ npx netlify deploy --prod --dir=out
 #### **1.3.1 Paystack Webhooks**
 
 Configure in Paystack Dashboard:
-- **Webhook URL**: `https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/paystack-integration/webhook`
+- **Webhook URL**: `https://your-project-reference.supabase.co/functions/v1/paystack-integration/webhook`
 - **Events**: `charge.success`, `charge.failed`, `transfer.success`, `transfer.failed`
 
 #### **1.3.2 Sayswitch Webhooks**
 
 Configure in Sayswitch Dashboard:
-- **Webhook URL**: `https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/sayswitch-integration/webhook`
+- **Webhook URL**: `https://your-project-reference.supabase.co/functions/v1/sayswitch-integration/webhook`
 - **Events**: `transfer.success`, `transfer.failed`, `transfer.pending`
 
 ---
@@ -157,6 +157,14 @@ This section covers deploying the unified Credit-as-a-Service (CaaS) integration
 From your local machine, run the deployment script:
 
 ```bash
+# Test health check
+curl https://your-project-reference.supabase.co/functions/v1/client-api/health
+
+# Test payment initialization
+curl -X POST https://your-project-reference.supabase.co/functions/v1/client-api/payments/initialize \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"email": "test@example.com", "amount": 5000, "currency": "NGN"}'
 # Navigate to the project directory
 cd /Users/seyederick/DevOps/_project_folders/the-fixer-initiative
 
@@ -182,6 +190,11 @@ ssh -p 2222 root@168.231.74.29
 Then on the VPS:
 
 ```bash
+# Monitor Supabase functions
+supabase functions logs --project-ref your-project-reference
+
+# Monitor database performance
+supabase db logs --project-ref your-project-reference
 # Navigate to onasis-gateway directory
 cd /path/to/onasis-gateway
 
@@ -215,6 +228,15 @@ This will:
 
 ### **2.3 Verification and Testing**
 
+### **Supabase Project**
+- **Dashboard**: https://supabase.com/dashboard/project/your-project-reference
+- **API URL**: https://your-project-reference.supabase.co
+- **Studio**: https://your-project-reference.supabase.co/studio
+
+### **Edge Functions**
+- **Client API**: https://your-project-reference.supabase.co/functions/v1/client-api
+- **Paystack Integration**: https://your-project-reference.supabase.co/functions/v1/paystack-integration
+- **Sayswitch Integration**: https://your-project-reference.supabase.co/functions/v1/sayswitch-integration
 #### **2.3.1 Verify Deployment**
 
 Check deployment status:
@@ -243,6 +265,42 @@ psql -U postgres -d onasis_gateway
 # Check schema creation
 \dt credit.*
 
+## 🔧 **Troubleshooting**
+
+### **Common Issues**
+
+1. **Function Deployment Fails**
+   ```bash
+   # Check function logs
+   supabase functions logs client-api --project-ref your-project-reference
+   
+   # Redeploy with verbose output
+   supabase functions deploy client-api --project-ref your-project-reference --debug
+   ```
+
+2. **Environment Variables Not Working**
+   - Verify variables are set in Supabase Dashboard
+   - Check variable names match exactly
+   - Restart functions after setting variables
+
+3. **Database Connection Issues**
+   ```bash
+   # Check database status
+   supabase db status --project-ref your-project-reference
+   
+   # Reset database if needed
+   supabase db reset --project-ref your-project-reference
+   ```
+
+4. **Frontend Build Errors**
+   ```bash
+   # Clear Next.js cache
+   rm -rf .next
+   npm run build
+   
+   # Check for TypeScript errors
+   npm run lint
+   ```
 # Check adapter registration
 SELECT * FROM onasis.adapters WHERE adapter_code = 'CAAS';
 ```
