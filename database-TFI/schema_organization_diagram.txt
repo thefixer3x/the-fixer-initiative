@@ -1,0 +1,131 @@
+# Database Schema Organization Diagram
+
+## Current State (Mixed in public schema)
+```
+public schema (69 tables mixed together)
+├── orders, order_items, products
+├── users, profiles, organizations  
+├── beneficiaries, bulk_payments
+├── memory_entries, ai_recommendations
+├── company_projects, company_services
+└── ... (64 more tables)
+```
+
+## Proposed State (Separated by Project)
+
+### 🛒 E-commerce Schema (ecommerce)
+```
+ecommerce schema
+├── orders, order_items
+├── products, product_embeddings
+├── marketplace_transactions
+├── payment_items, payment_audit, user_payments
+├── say_orders, say_bills, say_transfers
+├── stripe_connect_accounts
+├── subscriptions
+└── virtual_cards
+```
+
+### 🏢 SaaS Platform Schema (saas_platform)
+```
+saas_platform schema
+├── company_projects, company_services
+├── company_endpoints, company_usage_logs
+├── api_keys, vendor_api_keys
+├── organizations, users, profiles
+├── user_roles, user_sessions, user_tiers
+├── notification_settings, notifications
+├── sessions, oauth_sessions
+├── webhook_logs, system_error_logs
+└── usage_tracking
+```
+
+### 🏦 Banking Services Schema (banking_services)
+```
+banking_services schema
+├── beneficiaries, bulk_payments
+├── business_financial_insights
+├── business_profiles
+├── edoc_consents, edoc_financial_analysis
+├── edoc_transactions, edoc_usage_logs
+├── risk_analysis
+├── user_consents
+├── agent_banks_memories
+├── agent_banks_memory_search_logs
+└── agent_banks_sessions
+```
+
+### 🤖 AI Services Schema (ai_services)
+```
+ai_services schema
+├── memory_entries, memory_access_patterns
+├── memory_search_analytics
+├── ai_recommendations, ai_response_cache
+├── ai_usage_logs
+├── chat_conversations, chat_messages
+├── imported_data, search_history
+├── query_classifications
+├── recommendations, pricing_insights
+└── topics
+```
+
+### 🔧 Shared Services Schema (shared_services)
+```
+shared_services schema
+├── feature_flags
+└── simple_users
+```
+
+## Benefits of Separation
+
+### 1. Clear Project Boundaries
+- Each project has its own dedicated schema
+- No more confusion about table ownership
+- Easy to identify project-specific data
+
+### 2. Improved Security
+- Schema-level access control
+- Project-specific RLS policies
+- Better data isolation
+
+### 3. Better Performance
+- Schema-specific indexing
+- Reduced cross-project queries
+- Better query optimization
+
+### 4. Easier Maintenance
+- Clear separation of concerns
+- Easier backup/restore per project
+- Simplified development
+
+### 5. Scalability
+- Independent optimization per schema
+- Project-specific features
+- Better resource allocation
+
+## Migration Path
+
+1. **Create schemas** (ecommerce, saas_platform, banking_services, ai_services, shared_services)
+2. **Move tables** to appropriate schemas
+3. **Update foreign keys** to reference new schema locations
+4. **Update RLS policies** for new schemas
+5. **Update application code** to use new schema references
+6. **Test thoroughly** before production deployment
+
+## Application Code Changes
+
+### Before (Mixed):
+```javascript
+const orders = await supabase.from('orders').select('*');
+const users = await supabase.from('users').select('*');
+const beneficiaries = await supabase.from('beneficiaries').select('*');
+```
+
+### After (Separated):
+```javascript
+const orders = await supabase.from('ecommerce.orders').select('*');
+const users = await supabase.from('saas_platform.users').select('*');
+const beneficiaries = await supabase.from('banking_services.beneficiaries').select('*');
+```
+
+This separation will give you clear project boundaries and make it much easier to manage your different business lines!
