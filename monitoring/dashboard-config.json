@@ -12,7 +12,7 @@
       "status": "active",
       "monitors": {
         "uptime": true,
-        "api_health": "https://api.connectionpoint.tech/v1/memory/health",
+        "api_health": "https://dev.connectionpoint.tech/v1/memory/health",
         "usage_metrics": true,
         "error_rate": true
       }
@@ -24,7 +24,7 @@
       "status": "active",
       "monitors": {
         "uptime": true,
-        "api_health": "https://api.connectionpoint.tech/v1/ai/agent-banks/health",
+        "api_health": "https://dev.connectionpoint.tech/v1/ai/agent-banks/health",
         "execution_success_rate": true,
         "user_sessions": true
       }

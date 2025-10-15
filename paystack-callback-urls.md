@@ -5,12 +5,12 @@
 ### Webhook URLs (Server-to-Server)
 - **Purpose**: Payment status updates sent to your server
 - **Test URL**: `https://f525e96e43e2.ngrok-free.app/webhook/paystack`
-- **Production URL**: `https://your-vps-domain.com/webhook/paystack`
+- **Production URL**: `https://connectionpoint.tech/webhook/paystack`
 
 ### Callback URLs (Client-Side Redirects)
 - **Purpose**: Where users are redirected after payment
 - **Test URL**: `https://f525e96e43e2.ngrok-free.app/callback/success`
-- **Production URL**: `https://your-vps-domain.com/callback/success`
+- **Production URL**: `https://connectionpoint.tech/callback/success`
 
 ## Paystack Dashboard Configuration
 
@@ -28,11 +28,11 @@
 
 ### Production Environment
 **Webhook Settings:**
-- URL: `https://your-vps-domain.com/webhook/paystack`
+- URL: `https://connectionpoint.tech/webhook/paystack`
 - Events: Same as test
 
 **Callback Settings:**
-- Callback URL: `https://your-vps-domain.com/callback`
+- Callback URL: `https://connectionpoint.tech/callback`
 
 ## Payment Integration Example
 
@@ -71,8 +71,8 @@ const handler = PaystackPop.setup({
 - **Callback**: `https://f525e96e43e2.ngrok-free.app/callback`
 
 ### Production Environment
-- **Webhook**: `https://your-vps-domain.com/webhook/paystack`
-- **Callback**: `https://your-vps-domain.com/callback`
+- **Webhook**: `https://connectionpoint.tech/webhook/paystack`
+- **Callback**: `https://connectionpoint.tech/callback`
 
 ## IP Whitelisting
 

@@ -1,8 +1,21 @@
-# 🚀 Deployment Guide - The Fixer Initiative Control Room
+# 🚀 Comprehensive Deployment Guide - The Fixer Initiative
 
-## 📋 Pre-Deployment Checklist
+## Overview
 
-### ✅ **Completed**
+This guide provides comprehensive instructions for deploying the two core components of The Fixer Initiative:
+
+1.  **The Control Room**: The frontend dashboard and Supabase backend (edge functions, database).
+2.  **Onasis Gateway & CaaS**: The backend API gateway, MCP server, and Credit-as-a-Service module running on a VPS.
+
+---
+
+## 🎯 Part 1: Control Room Deployment (Supabase & Vercel/Netlify)
+
+This section covers the deployment of the frontend application and its associated Supabase services.
+
+### 📋 Pre-Deployment Checklist
+
+#### ✅ **Completed**
 - [x] Frontend application built and tested
 - [x] Database schema created and migrated
 - [x] Edge functions developed
@@ -10,7 +23,7 @@
 - [x] Production Supabase credentials obtained
 - [x] Environment configuration created
 
-### 🔄 **In Progress**
+#### 🔄 **In Progress**
 - [ ] Deploy Supabase edge functions
 - [ ] Configure production environment
 - [ ] Set up webhook endpoints
@@ -18,9 +31,9 @@
 
 ---
 
-## 🎯 **Phase 1: Supabase Production Setup**
+### **1.1 Supabase Production Setup**
 
-### **1.1 Deploy Edge Functions**
+#### **1.1.1 Deploy Edge Functions**
 
 ```bash
 # Navigate to control room directory
@@ -39,7 +52,7 @@ supabase functions deploy sayswitch-integration --project-ref your-project-refer
 supabase functions deploy openai-assistant --project-ref your-project-reference
 ```
 
-### **1.2 Run Database Migrations**
+#### **1.1.2 Run Database Migrations**
 
 ```bash
 # Apply all migrations to production
@@ -49,7 +62,7 @@ supabase db push --project-ref your-project-reference
 supabase migration list --project-ref your-project-reference
 ```
 
-### **1.3 Configure Environment Variables**
+#### **1.1.3 Configure Environment Variables**
 
 Set the following environment variables in Supabase Dashboard:
 
@@ -75,9 +88,9 @@ SEFTEC_STORE_API_URL=https://api.seftec.store/v1
 
 ---
 
-## 🎯 **Phase 2: Frontend Deployment**
+### **1.2 Frontend Deployment**
 
-### **2.1 Deploy to Vercel (Recommended)**
+#### **1.2.1 Deploy to Vercel (Recommended)**
 
 ```bash
 # Install Vercel CLI
@@ -93,19 +106,10 @@ vercel --prod
 vercel env add NEXT_PUBLIC_SUPABASE_URL
 vercel env add NEXT_PUBLIC_SUPABASE_ANON_KEY
 vercel env add SUPABASE_SERVICE_ROLE_KEY
-vercel env add INTERNAL_VENDOR_API_KEY
-vercel env add PAYSTACK_SECRET_KEY
-vercel env add PAYSTACK_WEBHOOK_SECRET
-vercel env add SAYSWITCH_API_KEY
-vercel env add SAYSWITCH_BASE_URL
-vercel env add SAYSWITCH_WEBHOOK_SECRET
-vercel env add SD_GHOST_API_URL
-vercel env add AGENT_BANKS_API_URL
-vercel env add VORTEXCORE_API_URL
-vercel env add SEFTEC_STORE_API_URL
+# ... (add all other required environment variables)
 ```
 
-### **2.2 Alternative: Deploy to Netlify**
+#### **1.2.2 Alternative: Deploy to Netlify**
 
 ```bash
 # Build the application
@@ -117,25 +121,40 @@ npx netlify deploy --prod --dir=out
 
 ---
 
-## 🎯 **Phase 3: Webhook Configuration**
+### **1.3 Webhook Configuration**
 
-### **3.1 Paystack Webhooks**
+#### **1.3.1 Paystack Webhooks**
 
 Configure in Paystack Dashboard:
 - **Webhook URL**: `https://your-project-reference.supabase.co/functions/v1/paystack-integration/webhook`
 - **Events**: `charge.success`, `charge.failed`, `transfer.success`, `transfer.failed`
 
-### **3.2 Sayswitch Webhooks**
+#### **1.3.2 Sayswitch Webhooks**
 
 Configure in Sayswitch Dashboard:
 - **Webhook URL**: `https://your-project-reference.supabase.co/functions/v1/sayswitch-integration/webhook`
 - **Events**: `transfer.success`, `transfer.failed`, `transfer.pending`
 
 ---
+---
 
-## 🎯 **Phase 4: Production Testing**
+## 🎯 Part 2: Onasis Gateway & CaaS Deployment (VPS)
 
-### **4.1 Test API Endpoints**
+This section covers deploying the unified Credit-as-a-Service (CaaS) integration to the Onasis Gateway on the VPS.
+
+### **2.1 Prerequisites**
+- ✅ Domain purchased: `connectionpoint.tech` 
+- ✅ DNS A record created: `api.connectionpoint.tech` → `168.231.74.29`
+- ✅ VPS access: `ssh -p 2222 root@168.231.74.29`
+- ✅ Nginx configurations ready for both domains
+
+---
+
+### **2.2 Deployment Steps**
+
+#### **2.2.1 Deploy Nginx Configurations**
+
+From your local machine, run the deployment script:
 
 ```bash
 # Test health check
@@ -146,21 +165,29 @@ curl -X POST https://your-project-reference.supabase.co/functions/v1/client-api/
   -H "Authorization: Bearer YOUR_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{"email": "test@example.com", "amount": 5000, "currency": "NGN"}'
+# Navigate to the project directory
+cd /Users/seyederick/DevOps/_project_folders/the-fixer-initiative
+
+# Deploy nginx configurations for both domains
+./deploy-nginx-configs.sh
 ```
 
-### **4.2 Test Frontend**
+The script will:
+- Backup existing nginx configurations
+- Deploy `api.connectionpoint.tech` configuration (primary)
+- Keep `api.vortexcore.app` configuration (backup/legacy)
+- Test nginx configuration
+- Reload nginx service
 
-1. Visit your deployed frontend URL
-2. Test all dashboard features
-3. Verify real-time data updates
-4. Test client management functionality
-5. Verify transaction monitoring
+#### **2.2.2 Deploy CaaS Integration Files**
 
----
+SSH into the VPS and deploy the integration files:
 
-## 🎯 **Phase 5: Monitoring & Maintenance**
+```bash
+ssh -p 2222 root@168.231.74.29
+```
 
-### **5.1 Set Up Monitoring**
+Then on the VPS:
 
 ```bash
 # Monitor Supabase functions
@@ -168,19 +195,38 @@ supabase functions logs --project-ref your-project-reference
 
 # Monitor database performance
 supabase db logs --project-ref your-project-reference
+# Navigate to onasis-gateway directory
+cd /path/to/onasis-gateway
+
+# Apply database migration
+psql -U postgres -d onasis_gateway -f database/migrations/001_add_credit_schema.sql
+
+# Install/update dependencies
+npm install
+
+# Restart the services
+pm2 restart onasis-gateway
+pm2 restart mcp-server
 ```
 
-### **5.2 Set Up Alerts**
+#### **2.2.3 Setup SSL Certificates**
 
-Configure alerts for:
-- Function errors
-- High response times
-- Database connection issues
-- Payment processing failures
+From your local machine:
+
+```bash
+# Setup SSL certificates for both domains
+./deploy-nginx-configs.sh ssl
+```
+
+This will:
+- Install certbot if needed
+- Generate SSL certificates for `api.connectionpoint.tech`
+- Generate SSL certificates for `api.vortexcore.app` (if config exists)
+- Configure HTTPS redirects
 
 ---
 
-## 📊 **Production URLs**
+### **2.3 Verification and Testing**
 
 ### **Supabase Project**
 - **Dashboard**: https://supabase.com/dashboard/project/your-project-reference
@@ -191,12 +237,33 @@ Configure alerts for:
 - **Client API**: https://your-project-reference.supabase.co/functions/v1/client-api
 - **Paystack Integration**: https://your-project-reference.supabase.co/functions/v1/paystack-integration
 - **Sayswitch Integration**: https://your-project-reference.supabase.co/functions/v1/sayswitch-integration
+#### **2.3.1 Verify Deployment**
 
-### **Frontend**
-- **Production URL**: [Your Vercel/Netlify URL]
-- **Local Development**: http://localhost:3000
+Check deployment status:
 
----
+```bash
+# Check status
+./deploy-nginx-configs.sh status
+
+# Test API endpoints
+curl -I http://api.connectionpoint.tech/health
+curl -I https://api.connectionpoint.tech/health
+
+# Test MCP server
+curl -I http://api.connectionpoint.tech/mcp
+
+# Test credit endpoints (after deployment)
+curl -I http://api.connectionpoint.tech/api/credit
+```
+
+#### **2.3.2 Test CaaS Integration**
+
+```bash
+# Connect to database
+psql -U postgres -d onasis_gateway
+
+# Check schema creation
+\dt credit.*
 
 ## 🔧 **Troubleshooting**
 
@@ -234,46 +301,58 @@ Configure alerts for:
    # Check for TypeScript errors
    npm run lint
    ```
+# Check adapter registration
+SELECT * FROM onasis.adapters WHERE adapter_code = 'CAAS';
+```
+
+---
+---
+
+## 🎯 Part 3: Production Testing & Monitoring
+
+After deploying both the Control Room and the Gateway, perform these final checks.
+
+### **3.1 End-to-End Testing**
+
+1.  **Test Frontend**: Visit your deployed frontend URL and test all dashboard features.
+2.  **Test API Endpoints**:
+    ```bash
+    # Test health check from Supabase function
+    curl https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/health
+
+    # Test payment initialization through Supabase function
+    curl -X POST https://mxtsdgkwzjzlttpotole.supabase.co/functions/v1/client-api/payments/initialize \
+      -H "Authorization: Bearer YOUR_API_KEY" \
+      -H "Content-Type: application/json" \
+      -d '{"email": "test@example.com", "amount": 5000, "currency": "NGN"}'
+    ```
+
+### **3.2 Monitoring & Maintenance**
+
+```bash
+# Monitor Supabase functions
+supabase functions logs --project-ref mxtsdgkwzjzlttpotole
+
+# Monitor VPS services
+ssh -p 2222 root@168.231.74.29 "pm2 logs"
+```
 
 ---
 
-## 📈 **Performance Optimization**
+## 📊 **Production URLs**
 
-### **Database Optimization**
-- Enable connection pooling
-- Set up read replicas for analytics
-- Optimize query performance
-- Set up proper indexing
+### **Supabase Project**
+- **Dashboard**: https://supabase.com/dashboard/project/mxtsdgkwzjzlttpotole
+- **API URL**: https://mxtsdgkwzjzlttpotole.supabase.co
 
-### **Function Optimization**
-- Implement caching for frequently accessed data
-- Use connection pooling for database connections
-- Optimize cold start times
-- Set up proper error handling
+### **Gateway & CaaS API**
+- **Primary Domain**: `https://api.connectionpoint.tech`
 
-### **Frontend Optimization**
-- Enable Next.js caching
-- Implement service workers
-- Optimize bundle size
-- Set up CDN for static assets
+### **Frontend**
+- **Production URL**: [Your Vercel/Netlify URL]
 
 ---
 
 ## 🎉 **Deployment Complete!**
 
-Once all phases are complete, your control room will be:
-
-- ✅ **Live and accessible** via production URL
-- ✅ **Connected to real data** from ecosystem projects
-- ✅ **Processing real transactions** via Paystack/Sayswitch
-- ✅ **Monitoring all services** in real-time
-- ✅ **Ready for production use**
-
-### **Next Steps**
-1. Set up monitoring and alerting
-2. Configure backup strategies
-3. Implement security best practices
-4. Plan for scaling as usage grows
-5. Set up automated deployments
-
-Your Fixer Initiative Control Room is now ready to manage your entire ecosystem! 🚀
+Your Fixer Initiative Control Room and Onasis Gateway are now deployed and ready to manage your ecosystem! 🚀

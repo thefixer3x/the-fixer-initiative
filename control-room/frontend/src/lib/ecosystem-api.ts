@@ -28,10 +28,10 @@ interface AggregatedMetrics {
 
 class EcosystemAPIClient {
   private baseURLs = {
-    sdGhost: process.env.NEXT_PUBLIC_SD_GHOST_API_URL || 'https://api.sd-ghost.protocol/v1',
-    agentBanks: process.env.NEXT_PUBLIC_AGENT_BANKS_API_URL || 'https://api.agent-banks.com/v1',
-    vortexcore: process.env.NEXT_PUBLIC_VORTEXCORE_API_URL || 'https://api.vortexcore.app/v1',
-    seftecStore: process.env.NEXT_PUBLIC_SEFTEC_STORE_API_URL || 'https://api.seftec.store/v1'
+    sdGhost: process.env.NEXT_PUBLIC_SD_GHOST_API_URL || 'https://dev.connectionpoint.tech/v1/memory',
+    agentBanks: process.env.NEXT_PUBLIC_AGENT_BANKS_API_URL || 'https://dev.connectionpoint.tech/v1/ai/agent-banks',
+    vortexcore: process.env.NEXT_PUBLIC_VORTEXCORE_API_URL || 'https://dev.connectionpoint.tech/v1/apps/vortexcore',
+    seftecStore: process.env.NEXT_PUBLIC_SEFTEC_STORE_API_URL || 'https://dev.connectionpoint.tech/v1/apps/seftec-shop'
   }
 
   private async fetchWithFallback(url: string, fallbackData: any) {

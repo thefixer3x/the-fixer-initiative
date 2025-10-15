@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: B2C E-commerce Platform
 - **Purpose**: Smart shopping with AI recommendations and insights
-- **API Endpoint**: https://api.connectionpoint.tech/v1/apps/seftec-shop
+- **API Endpoint**: https://dev.connectionpoint.tech/v1/apps/seftec-shop
 
 ### 💰 Revenue Model
 - **Transaction Fees**: 3.5% + $0.30
