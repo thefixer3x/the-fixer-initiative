@@ -10,7 +10,7 @@
 ### 🔧 Service Details
 - **Type**: Infrastructure Service
 - **Purpose**: Persistent memory and data storage for AI applications
-- **API Endpoint**: https://dev.connectionpoint.tech/v1/memory
+- **API Endpoint**: https://api.fixer-initiative.com/v1/memory
 
 ### 💰 Revenue Model
 - **Storage**: $0.001 per KB/month
@@ -43,7 +43,7 @@ Growth Rate: +15% MoM
 
 ### 📋 Integration Guide
 ```python
-from connectionpoint import SDGhostClient
+from fixer_initiative import SDGhostClient
 
 client = SDGhostClient(api_key="YOUR_KEY")
 await client.store_memory(user_id, content)

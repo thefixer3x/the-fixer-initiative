@@ -1,0 +1,88 @@
+2025-07-09 18:27:54 - 🚀 AGENT BANKS SERVER ENDPOINT TESTING
+2025-07-09 18:27:54 - ======================================
+2025-07-09 18:27:54 - Server URL: http://localhost:3000
+2025-07-09 18:27:54 - Test started at: Wed Jul  9 18:27:54 WAT 2025
+2025-07-09 18:27:54 - 
+2025-07-09 18:27:54 - 🌐 BASIC CONNECTIVITY TEST
+2025-07-09 18:27:54 - --------------------------
+2025-07-09 18:27:54 - ✅ Server is accessible at http://localhost:3000
+2025-07-09 18:27:54 - 
+2025-07-09 18:27:54 - 🏥 HEALTH CHECK ENDPOINT
+2025-07-09 18:27:54 - ------------------------
+2025-07-09 18:27:54 - 🔍 Testing: Health Check
+2025-07-09 18:27:54 -    Endpoint: GET /health
+2025-07-09 18:27:54 -    ✅ SUCCESS (HTTP 200)
+2025-07-09 18:27:54 -    Response: {"status":"ok","server":"Enhanced Smart Memory Server","version":"2.0.0","uptime":51087.231644166,"supabase":"configured","openai":"configured","featu...
+2025-07-09 18:27:54 - 
+2025-07-09 18:27:54 - 🏠 ROOT ENDPOINT
+2025-07-09 18:27:54 - ----------------
+2025-07-09 18:27:54 - 🔍 Testing: Root/Home Page
+2025-07-09 18:27:54 -    Endpoint: GET /
+2025-07-09 18:27:54 -    ❌ NOT FOUND (HTTP 404)
+2025-07-09 18:27:54 -    Response: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<
+2025-07-09 18:27:54 - 
+2025-07-09 18:27:54 - 🔍 MEMORY SEARCH ENDPOINT
+2025-07-09 18:27:54 - -------------------------
+2025-07-09 18:27:54 - 🔍 Testing: Memory Search API
+2025-07-09 18:27:54 -    Endpoint: POST /api/memories/search
+2025-07-09 18:27:56 -    ✅ SUCCESS (HTTP 200)
+2025-07-09 18:27:56 -    Response: {"success":true,"memories":[],"count":0,"search_type":"text","strategies_used":[{"strategy":"content","success":true,"count":0},{"strategy":"title","s...
+2025-07-09 18:27:56 - 
+2025-07-09 18:27:56 - 💬 CHAT ENDPOINT
+2025-07-09 18:27:56 - ----------------
+2025-07-09 18:27:56 - 🔍 Testing: Chat Interface API
+2025-07-09 18:27:56 -    Endpoint: POST /api/chat
+2025-07-09 18:27:56 -    ✅ SUCCESS (HTTP 200)
+2025-07-09 18:27:56 -    Response: {"response":"Enhanced Smart Memory Server with CUA-based memory search!","receivedMessages":0,"memoryContext":[],"features":{"vector_search":true,"mem...
+2025-07-09 18:27:56 - 
+2025-07-09 18:27:56 - 📊 ANALYTICS ENDPOINT
+2025-07-09 18:27:56 - ---------------------
+2025-07-09 18:27:56 - 🔍 Testing: Analytics Dashboard
+2025-07-09 18:27:56 -    Endpoint: GET /api/analytics
+2025-07-09 18:27:57 -    ✅ SUCCESS (HTTP 200)
+2025-07-09 18:27:57 -    Response: {"total_memories":0,"by_type":{},"by_status":{},"server_uptime":51089.816554375,"version":"2.0.0"}...
+2025-07-09 18:27:57 - 
+2025-07-09 18:27:57 - 📝 MEMORY CREATION ENDPOINT (Known Issue)
+2025-07-09 18:27:57 - -----------------------------------------
+2025-07-09 18:27:57 - 🔍 Testing: Memory Creation API
+2025-07-09 18:27:57 -    Endpoint: POST /api/memories
+2025-07-09 18:27:57 -    ❌ SERVER ERROR (HTTP 500)
+2025-07-09 18:27:57 -    Response: {"success":false,"error":"Invalid API key"}
+2025-07-09 18:27:57 -    ℹ️  Note: This endpoint is expected to fail with 'Invalid API key' error
+2025-07-09 18:27:57 - 
+2025-07-09 18:27:57 - 📁 STATIC ASSETS CHECK
+2025-07-09 18:27:57 - ----------------------
+2025-07-09 18:27:57 - 🔍 Testing: Favicon
+2025-07-09 18:27:57 -    Endpoint: GET /favicon.ico
+2025-07-09 18:27:58 -    ❌ NOT FOUND (HTTP 404)
+2025-07-09 18:27:58 -    Response: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<
+2025-07-09 18:27:58 - 
+2025-07-09 18:27:58 - 🖥️  SERVER STATUS CHECK
+2025-07-09 18:27:58 - -----------------------
+2025-07-09 18:27:58 - ✅ Server response time: 0.001531s
+2025-07-09 18:27:58 -    🚀 Excellent response time
+2025-07-09 18:27:58 - 
+2025-07-09 18:27:58 - 📋 TEST SUMMARY
+2025-07-09 18:27:58 - ===============
+2025-07-09 18:27:58 - Total Tests: 7
+2025-07-09 18:27:58 - Passed: 4
+2025-07-09 18:27:58 - Failed: 3
+2025-07-09 18:27:58 - Success Rate: 57%
+2025-07-09 18:27:58 - ⚠️  OVERALL STATUS: ❌ POOR - Server has significant issues
+2025-07-09 18:27:58 - 
+2025-07-09 18:27:58 - 🕐 Test completed at: Wed Jul  9 18:27:58 WAT 2025
+2025-07-09 18:27:58 - 📁 Results saved to: endpoint-test-results.txt

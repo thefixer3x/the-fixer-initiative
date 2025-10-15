@@ -1,0 +1,21 @@
+{
+  "name": "api-testing-playground",
+  "version": "1.0.0",
+  "description": "API Testing Playground for The Fixer Initiative",
+  "main": "api-onboarding.js",
+  "scripts": {
+    "start": "node api-onboarding.js",
+    "dev": "nodemon api-onboarding.js",
+    "test": "echo \"No tests yet\" && exit 0"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "keywords": ["api", "testing", "onboarding", "monitoring"],
+  "author": "The Fixer Initiative",
+  "license": "MIT"
+}
