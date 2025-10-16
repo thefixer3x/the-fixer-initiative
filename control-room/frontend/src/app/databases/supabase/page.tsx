@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import DashboardLayout from '@/components/layout/DashboardLayout'
-import { Database, Users, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react'
+import { Database, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface SupabaseMetrics {
@@ -25,7 +25,7 @@ export default function SupabasePage() {
     lastChecked: new Date().toISOString()
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [testResults, setTestResults] = useState<any[]>([])
+  const [testResults, setTestResults] = useState<{ timestamp: string; status: string; message: string; responseTime?: number }[]>([])
 
   const testConnection = async () => {
     setIsLoading(true)
@@ -166,7 +166,7 @@ export default function SupabasePage() {
                       </div>
                       <div className="text-sm text-gray-500">
                         {new Date(result.timestamp).toLocaleTimeString()}
-                        {result.responseTime > 0 && ` | ${result.responseTime}ms`}
+                        {result.responseTime && result.responseTime > 0 && ` | ${result.responseTime}ms`}
                       </div>
                     </div>
                   ))}

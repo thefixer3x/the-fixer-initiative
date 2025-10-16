@@ -96,9 +96,9 @@ export class MultiDatabaseAPI {
 
             return {
                 totalApps: appsResult.data?.length || 0,
-                activeApps: appsResult.data?.filter((app: any) => app.status === 'active').length || 0,
+                activeApps: appsResult.data?.filter((app: { status: string }) => app.status === 'active').length || 0,
                 totalOrganizations: orgsResult.data?.length || 0,
-                activeOrganizations: orgsResult.data?.filter((org: any) => org.status === 'active').length || 0,
+                activeOrganizations: orgsResult.data?.filter((org: { status: string }) => org.status === 'active').length || 0,
                 totalProfiles: profilesResult.data?.length || 0,
                 totalUsers: authUsersResult.data?.length || 0,
                 lastUpdated: new Date().toISOString()
@@ -173,7 +173,7 @@ export class MultiDatabaseAPI {
     }
 
     // Real-time Subscriptions
-    static subscribeToApps(callback: (payload: any) => void) {
+    static subscribeToApps(callback: (payload: unknown) => void) {
         return supabase
             .channel('control_room_apps')
             .on('postgres_changes',
@@ -183,7 +183,7 @@ export class MultiDatabaseAPI {
             .subscribe()
     }
 
-    static subscribeToOrganizations(callback: (payload: any) => void) {
+    static subscribeToOrganizations(callback: (payload: unknown) => void) {
         return supabase
             .channel('client_organizations')
             .on('postgres_changes',

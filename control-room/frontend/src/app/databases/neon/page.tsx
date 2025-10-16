@@ -1,9 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAuth } from '@/contexts/AuthContext'
 import DashboardLayout from '@/components/layout/DashboardLayout'
-import { Server, Database, Users, CheckCircle, XCircle, Clock, ArrowLeft, Activity } from 'lucide-react'
+import { Server, Database, CheckCircle, XCircle, Clock, ArrowLeft, Activity } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 interface NeonMetrics {
@@ -36,7 +36,7 @@ export default function NeonPage() {
     version: 'PostgreSQL 15.3'
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [testResults, setTestResults] = useState<any[]>([])
+  const [testResults, setTestResults] = useState<{ timestamp: string; status: string; message: string; responseTime?: number; details?: string }[]>([])
 
   const schemas: SchemaInfo[] = [
     { name: 'auth', tables: 8, description: 'Authentication & user management', color: 'bg-blue-100 text-blue-800' },
@@ -233,7 +233,7 @@ export default function NeonPage() {
                         </div>
                         <div className="text-sm text-gray-500">
                           {new Date(result.timestamp).toLocaleTimeString()}
-                          {result.responseTime > 0 && ` | ${result.responseTime}ms`}
+                          {result.responseTime && result.responseTime > 0 && ` | ${result.responseTime}ms`}
                         </div>
                       </div>
                       {result.details && (

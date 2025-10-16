@@ -8,7 +8,7 @@ interface AuthContextType {
   user: User | null
   session: Session | null
   loading: boolean
-  signIn: (email: string, password: string) => Promise<{ error: any }>
+  signIn: (email: string, password: string) => Promise<{ error: unknown }>
   signOut: () => Promise<void>
 }
 
@@ -22,12 +22,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Check if we should use mock auth (development or production without real auth setup)
     const useMockAuth = process.env.NODE_ENV === 'development' ||
-      process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true'
+      process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true' ||
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
     console.log('Auth Debug:', {
       NODE_ENV: process.env.NODE_ENV,
       USE_MOCK_AUTH: process.env.NEXT_PUBLIC_USE_MOCK_AUTH,
-      SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      HAS_SUPABASE_URL: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      HAS_SUPABASE_KEY: !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
       useMockAuth
     })
 

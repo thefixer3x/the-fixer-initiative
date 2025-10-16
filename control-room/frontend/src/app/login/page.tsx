@@ -21,12 +21,15 @@ export default function LoginPage() {
     try {
       const { error } = await signIn(email, password)
       if (error) {
-        toast.error(error.message)
+        const errorMessage = error && typeof error === 'object' && 'message' in error 
+          ? (error as { message: string }).message 
+          : 'Authentication failed'
+        toast.error(errorMessage)
       } else {
         toast.success('Successfully signed in!')
         router.push('/')
       }
-    } catch (error) {
+    } catch {
       toast.error('An unexpected error occurred')
     } finally {
       setLoading(false)

@@ -5,11 +5,8 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import {
-    BarChart3,
     TrendingUp,
     TrendingDown,
-    Users,
-    CreditCard,
     Clock,
     DollarSign,
     Activity
@@ -30,7 +27,7 @@ import {
     Pie,
     Cell
 } from 'recharts'
-import { format, subDays, startOfDay, endOfDay } from 'date-fns'
+// import { format, subDays, startOfDay, endOfDay } from 'date-fns'
 
 const mockUsageData = {
     dailyUsage: [
@@ -101,7 +98,7 @@ export default function UsageAnalytics() {
         title: string
         value: string | number
         change?: string
-        icon: any
+        icon: React.ElementType
         color?: string
     }) => (
         <div className="bg-white overflow-hidden shadow rounded-lg">

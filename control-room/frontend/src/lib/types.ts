@@ -26,6 +26,8 @@ export interface ClientOrganization {
   billing_tier: 'starter' | 'professional' | 'enterprise'
   subscription_tier: 'starter' | 'professional' | 'enterprise'
   monthly_quota: number
+  webhook_url?: string
+  callback_url?: string
   created_at: string
   updated_at: string
 }
@@ -67,7 +69,7 @@ export interface ClientTransaction {
   recipient_account?: string
   recipient_bank_code?: string
   recipient_name?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
   client_ip?: string
   user_agent?: string
   created_at: string

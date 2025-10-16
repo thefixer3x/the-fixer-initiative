@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Database, Server, Activity, ExternalLink, Users, TrendingUp } from 'lucide-react'
-import { ecosystemApps, getEcosystemMetrics, getTopPerformingApps, getRecentActivity } from '@/lib/ecosystem-data'
+import { getEcosystemMetrics, getTopPerformingApps, getRecentActivity } from '@/lib/ecosystem-data'
 
 export default function HomePage() {
   const { user, loading } = useAuth()

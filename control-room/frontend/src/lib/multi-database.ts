@@ -1,11 +1,11 @@
 // Multi-Database Provider Management System
 // Supports Supabase, Neon, PostgreSQL, MySQL, and other database providers
 
-import { supabase, supabaseAdmin, neonDatabaseUrl, type DatabaseProvider } from './supabase'
+import { supabase, neonDatabaseUrl, type DatabaseProvider } from './supabase'
 
 interface DatabaseConnection {
-    execute: (query: string, params?: any[]) => Promise<any>
-    query: (query: string, params?: any[]) => Promise<any[]>
+    execute: (query: string, params?: unknown[]) => Promise<unknown>
+    query: (query: string, params?: unknown[]) => Promise<unknown[]>
     close?: () => Promise<void>
 }
 
@@ -50,11 +50,11 @@ class MultiDatabaseManager {
             const neonSql = neon(neonDatabaseUrl)
 
             this.connections.set('neon-enhanced', {
-                execute: async (query: string, params?: any[]) => {
+                execute: async (_query: string, _params?: unknown[]) => {
                     // For now, use a simple health check query
                     return await neonSql`SELECT 1 as health_check`
                 },
-                query: async (query: string, params?: any[]) => {
+                query: async (_query: string, _params?: unknown[]) => {
                     // For now, use a simple health check query  
                     return await neonSql`SELECT 1 as health_check`
                 }
