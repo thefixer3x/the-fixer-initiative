@@ -1,9 +1,26 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
+
+// Client-side date component to avoid hydration mismatch
+function ClientDate() {
+  const [mounted, setMounted] = useState(false)
+  const [currentDate, setCurrentDate] = useState('')
+
+  useEffect(() => {
+    setMounted(true)
+    setCurrentDate(new Date().toLocaleDateString())
+  }, [])
+
+  if (!mounted) {
+    return <div className="text-sm text-gray-500">Loading...</div>
+  }
+
+  return <div className="text-sm text-gray-500">{currentDate}</div>
+}
 import { 
   LayoutDashboard, 
   Users, 
@@ -162,9 +179,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
             <div className="ml-4 flex items-center md:ml-6">
               <div className="flex items-center space-x-4">
-                <div className="text-sm text-gray-500">
-                  {new Date().toLocaleDateString()}
-                </div>
+                <ClientDate />
               </div>
             </div>
           </div>

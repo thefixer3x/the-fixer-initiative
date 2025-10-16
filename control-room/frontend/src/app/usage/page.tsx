@@ -43,11 +43,11 @@ const mockUsageData = {
         { date: '2024-01-07', requests: 1400, payments: 920, transfers: 480, revenue: 2800 }
     ],
     clientUsage: [
-        { client: 'Acme Corporation', requests: 4500, revenue: 12000, growth: 15.2 },
-        { client: 'TechStart Inc', requests: 3200, revenue: 8500, growth: 8.7 },
-        { client: 'Global Enterprises', requests: 2800, revenue: 15000, growth: -2.1 },
-        { client: 'StartupXYZ', requests: 1800, revenue: 4200, growth: 25.3 },
-        { client: 'FinanceCorp', requests: 2100, revenue: 6800, growth: 12.8 }
+        { client: 'VortexCore', requests: 4500, revenue: 12000, growth: 15.2 },
+        { client: 'Memory-as-a-Service', requests: 3200, revenue: 15000, growth: 18.4 },
+        { client: 'Onasis Core', requests: 2800, revenue: 8500, growth: 12.1 },
+        { client: 'Credit-as-a-Service', requests: 1800, revenue: 7200, growth: 25.3 },
+        { client: 'SEFTEC Store', requests: 2100, revenue: 4500, growth: 8.8 }
     ],
     serviceBreakdown: [
         { name: 'Payments', value: 65, color: '#3B82F6' },
@@ -156,10 +156,12 @@ export default function UsageAnalytics() {
                             onChange={(e) => setSelectedClient(e.target.value)}
                             className="block px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                         >
-                            <option value="all">All Clients</option>
-                            <option value="acme">Acme Corporation</option>
-                            <option value="techstart">TechStart Inc</option>
-                            <option value="global">Global Enterprises</option>
+                            <option value="all">All Apps</option>
+                            <option value="vortexcore">VortexCore</option>
+                            <option value="memory-service">Memory-as-a-Service</option>
+                            <option value="onasis-core">Onasis Core</option>
+                            <option value="credit-service">Credit-as-a-Service</option>
+                            <option value="seftec-store">SEFTEC Store</option>
                         </select>
                     </div>
                 </div>

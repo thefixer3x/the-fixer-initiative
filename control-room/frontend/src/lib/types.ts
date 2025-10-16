@@ -1,15 +1,42 @@
+// Enhanced Neon Database Types
+
+// Control Room App Management
+export interface ControlRoomApp {
+  id: string
+  name: string
+  description?: string
+  owner_id: string
+  status: 'active' | 'inactive' | 'maintenance'
+  created_at: string
+  updated_at: string
+}
+
+// Client Services Organization (Enhanced)
 export interface ClientOrganization {
   id: string
+  vendor_code: string
   client_code: string
+  name: string
   organization_name: string
   contact_email: string
   contact_name: string
   business_type: string
+  status: 'active' | 'inactive' | 'pending' | 'suspended'
+  is_active: boolean
+  billing_tier: 'starter' | 'professional' | 'enterprise'
   subscription_tier: 'starter' | 'professional' | 'enterprise'
   monthly_quota: number
-  webhook_url?: string
-  callback_url?: string
-  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+// User Profile with App Association
+export interface UserProfile {
+  id: string
+  user_id?: string
+  app_id: string
+  full_name?: string
+  avatar_url?: string
   created_at: string
   updated_at: string
 }
