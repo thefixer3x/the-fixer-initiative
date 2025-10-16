@@ -17,3 +17,4 @@ scripts/manual_restore_chunks/
 
 # Cache files
 .cache_ggshield
+.vercel

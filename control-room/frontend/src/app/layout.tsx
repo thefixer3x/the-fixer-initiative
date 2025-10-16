@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackClientApp } from "../stack/client";
 import "./globals.css";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider } from "@/contexts/StackAuthContext";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -27,10 +30,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <AuthProvider>
-          {children}
-          <Toaster position="top-right" />
-        </AuthProvider>
+        <StackProvider app={stackClientApp}>
+          <StackTheme>
+            <Suspense fallback={<div>Loading...</div>}>
+              <AuthProvider>
+                {children}
+                <Toaster position="top-right" />
+              </AuthProvider>
+            </Suspense>
+          </StackTheme>
+        </StackProvider>
       </body>
     </html>
   );
