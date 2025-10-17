@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useAuth } from '@/contexts/StackAuthContext'
+import { useAuth } from '@/contexts/SimpleAuthContext'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { 
@@ -120,7 +120,7 @@ export default function ClientManagement() {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/handler/sign-in')
+      router.push('/login')
     }
   }, [user, loading, router])
 

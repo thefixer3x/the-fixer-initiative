@@ -6,18 +6,7 @@ import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Fixer Initiative Control Room",
-  description: "Centralized control system for managing multiple Supabase projects efficiently",
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
-      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' }
-    ],
-    apple: [
-      { url: '/apple-touch-icon.png' },
-      { url: '/apple-touch-icon-precomposed.png' }
-    ]
-  }
+  description: "Centralized control system for managing multiple Supabase projects efficiently"
 };
 
 export default function RootLayout({

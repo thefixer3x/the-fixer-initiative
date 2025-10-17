@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useAuth } from '@/contexts/StackAuthContext'
+import { useAuth } from '@/contexts/SimpleAuthContext'
 
 // Client-side date component to avoid hydration mismatch
 function ClientDate() {

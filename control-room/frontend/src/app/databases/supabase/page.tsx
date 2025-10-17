@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/contexts/StackAuthContext'
+import { useAuth } from '@/contexts/SimpleAuthContext'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Database, CheckCircle, XCircle, Clock, ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
