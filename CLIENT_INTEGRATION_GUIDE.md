@@ -193,7 +193,7 @@ All endpoints support test mode when using test keys.
 const axios = require('axios');
 
 const client = axios.create({
-  baseURL: 'https://your-project.supabase.co/functions/v1/',
+  baseURL: 'https://lanonasis.supabase.co/functions/v1/',
   headers: {
     'Authorization': 'Bearer pk_live_VENDOR_keyid.sk_live_secret',
     'Content-Type': 'application/json'
@@ -222,7 +222,7 @@ headers = {
 
 # Initialize payment
 response = requests.post(
-    'https://your-project.supabase.co/functions/v1/paystack-integration/initialize',
+    'https://lanonasis.supabase.co/functions/v1/paystack-integration/initialize',
     json={
         'email': 'customer@example.com',
         'amount': 5000,
@@ -236,7 +236,7 @@ response = requests.post(
 ```php
 <?php
 $client = new GuzzleHttp\Client([
-    'base_uri' => 'https://your-project.supabase.co/functions/v1/',
+    'base_uri' => 'https://lanonasis.supabase.co/functions/v1/',
     'headers' => [
         'Authorization' => 'Bearer pk_live_VENDOR_keyid.sk_live_secret',
         'Content-Type' => 'application/json'

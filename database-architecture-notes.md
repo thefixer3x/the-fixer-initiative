@@ -4,8 +4,8 @@
 
 | Stack | Approach | Clean URL Option | Notes |
 |-------|----------|------------------|-------|
-| **Supabase** | Use a reverse proxy (e.g., Nginx/Cloudflare) | ✅ api.yourdomain.com → supabase.co | Requires setup |
-| **Neon** | Self-host your own API layer on top | ✅ api.yourdomain.com | Full control |
+| **Supabase** | Use a reverse proxy (e.g., Nginx/Cloudflare) | ✅ api.lanonasis.com → lanonasis.supabase.co | Requires setup |
+| **Neon** | Self-host your own API layer on top | ✅ api.lanonasis.com | Full control |
 | **Self-hosted Supabase** | Deploy on your VPS or Kubernetes | ✅ Your own subdomain | High effort but white-label |
 
 ## Current Setup Decision
@@ -14,7 +14,7 @@ Given the IP whitelisting requirements for Paystack/Sayswitch and the need for c
 
 ### Architecture
 ```
-Client API (api.yourdomain.com)
+Client API (api.lanonasis.com)
 ├── Hosted on Hostinger VPS (static IP)
 ├── Connects to Neon PostgreSQL
 ├── Handles Paystack/Sayswitch integration
@@ -33,7 +33,7 @@ Client API (api.yourdomain.com)
 - **VPS**: Hostinger with PM2 for webhook handlers
 - **Database**: Neon PostgreSQL for flexibility
 - **API Layer**: Express.js for full control
-- **Domain**: Clean endpoints like `api.yourdomain.com/payments`
+- **Domain**: Clean endpoints like `api.lanonasis.com/payments`
 - **Webhooks**: Direct to VPS with static IP
 
 This gives you the best of both worlds - the flexibility of Neon with the control of self-hosted API layer.

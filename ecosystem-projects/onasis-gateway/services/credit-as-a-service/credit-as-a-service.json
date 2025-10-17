@@ -1,0 +1,86 @@
+{
+    "name": "Credit-as-a-Service",
+    "code": "CAAS",
+    "description": "B2B credit facility management platform enabling competitive credit provider bidding and SME loan processing",
+    "version": "1.0.0",
+    "status": "active",
+    "endpoints": {
+        "submit_application": {
+            "method": "POST",
+            "path": "/api/credit/applications",
+            "description": "Submit a new credit application"
+        },
+        "get_applications": {
+            "method": "GET",
+            "path": "/api/credit/applications",
+            "description": "Get credit applications with filters"
+        },
+        "get_application": {
+            "method": "GET",
+            "path": "/api/credit/applications/:id",
+            "description": "Get specific application details with bids"
+        },
+        "update_application_status": {
+            "method": "PUT",
+            "path": "/api/credit/applications/:id/status",
+            "description": "Update application status"
+        },
+        "register_provider": {
+            "method": "POST",
+            "path": "/api/credit/providers",
+            "description": "Register a new credit provider"
+        },
+        "get_providers": {
+            "method": "GET",
+            "path": "/api/credit/providers",
+            "description": "Get list of credit providers"
+        },
+        "submit_bid": {
+            "method": "POST",
+            "path": "/api/credit/bids",
+            "description": "Submit a provider bid for an application"
+        },
+        "process_transaction": {
+            "method": "POST",
+            "path": "/api/credit/transactions",
+            "description": "Process a credit transaction"
+        },
+        "credit_check": {
+            "method": "POST",
+            "path": "/api/credit/credit-check",
+            "description": "Perform credit score check"
+        },
+        "analytics": {
+            "method": "GET",
+            "path": "/api/credit/analytics",
+            "description": "Get credit analytics"
+        },
+        "provider_performance": {
+            "method": "GET",
+            "path": "/api/credit/providers/:id/performance",
+            "description": "Get provider performance metrics"
+        }
+    },
+    "features": [
+        "Multi-provider competitive bidding",
+        "Automated credit scoring integration",
+        "Real-time application processing",
+        "Provider webhook notifications",
+        "Transaction tracking and reconciliation",
+        "Analytics and reporting",
+        "Flexible loan terms configuration",
+        "Multi-currency support",
+        "API-first integration approach"
+    ],
+    "dependencies": {
+        "database": "PostgreSQL",
+        "schema": "credit"
+    },
+    "webhooks": {
+        "application_submitted": "Triggered when new application is submitted",
+        "bid_received": "Triggered when provider submits a bid",
+        "application_approved": "Triggered when application is approved",
+        "disbursement_completed": "Triggered when loan is disbursed",
+        "payment_received": "Triggered when repayment is received"
+    }
+}

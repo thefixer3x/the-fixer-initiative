@@ -1,0 +1,17 @@
+{
+  "services": {
+    "github-api-test": {
+      "name": "GitHub API Test",
+      "type": "backend",
+      "url": "https://api.github.com",
+      "endpoints": [
+        "https://api.github.com"
+      ],
+      "purpose": "Repository management test",
+      "access": "public",
+      "onboardedAt": "2025-07-31T15:09:51.786Z",
+      "testScore": 97,
+      "status": "active"
+    }
+  }
+}

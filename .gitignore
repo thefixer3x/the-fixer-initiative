@@ -1,1 +1,20 @@
 node_modules/
+.env
+.env.local
+.env.production
+.env.development
+.env.test
+*.log
+.DS_Store
+
+# Database backups (contain secrets)
+*.backup
+*.dump
+*.sql.gz
+database-TFI/
+backups/
+scripts/manual_restore_chunks/
+
+# Cache files
+.cache_ggshield
+.vercel

@@ -1,0 +1,87 @@
+{
+  "name": "hostinger-vps-diagnostic",
+  "version": "1.0.0",
+  "description": "Hostinger VPS Diagnostic and Management Tool",
+  "mcpVersion": "2024-11-05",
+  "author": "VPS Management Team",
+  "license": "MIT",
+  "server": {
+    "command": "node",
+    "args": ["hostinger-vps-mcp.js"]
+  },
+  "capabilities": {
+    "tools": [
+      {
+        "name": "diagnose_vps",
+        "description": "Comprehensive VPS health check and diagnostics",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "vps_ip": {
+              "type": "string",
+              "description": "VPS IP address to diagnose"
+            },
+            "include_network": {
+              "type": "boolean",
+              "description": "Include network diagnostics",
+              "default": true
+            },
+            "include_ssh": {
+              "type": "boolean", 
+              "description": "Include SSH connectivity tests",
+              "default": true
+            },
+            "include_api": {
+              "type": "boolean",
+              "description": "Include API endpoint tests",
+              "default": true
+            }
+          },
+          "required": ["vps_ip"]
+        }
+      },
+      {
+        "name": "check_vps_status",
+        "description": "Quick VPS status check via API",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "server_id": {
+              "type": "string",
+              "description": "Server ID or IP address"
+            }
+          },
+          "required": ["server_id"]
+        }
+      },
+      {
+        "name": "restart_vps_services",
+        "description": "Restart VPS services via API",
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "server_id": {
+              "type": "string",
+              "description": "Server ID"
+            },
+            "service": {
+              "type": "string",
+              "enum": ["ssh", "apache", "nginx", "mysql", "all"],
+              "description": "Service to restart"
+            }
+          },
+          "required": ["server_id", "service"]
+        }
+      }
+    ]
+  },
+  "endpoints": {
+    "primary": "https://api.hostinger.com/v1",
+    "backup": "https://rest-api.hostinger.com/v2",
+    "fallback": "https://api.hostinger.com"
+  },
+  "authentication": {
+    "type": "bearer_token",
+    "env_var": "HOSTINGER_API_TOKEN"
+  }
+}

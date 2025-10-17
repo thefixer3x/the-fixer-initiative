@@ -57,7 +57,7 @@ Example: ck_live_CLIENT_001_1642234567_abc123.cs_live_def456ghi789jkl012mno345pq
 
 ### Base URL
 ```
-https://your-project.supabase.co/functions/v1/client-api
+https://lanonasis.supabase.co/functions/v1/client-api
 ```
 
 ### Authentication

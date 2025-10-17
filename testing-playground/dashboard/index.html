@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Testing Playground - The Fixer Initiative</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: white;
+        }
+        
+        .title { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+        .subtitle { font-size: 1.2rem; opacity: 0.9; }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn.secondary {
+            background: #6c757d;
+            margin-top: 0.5rem;
+        }
+        
+        .test-results {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .test-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .test-item:last-child { border-bottom: none; }
+        
+        .test-name { font-weight: 600; }
+        
+        .test-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .test-status.passed { background: #d4edda; color: #155724; }
+        .test-status.failed { background: #f8d7da; color: #721c24; }
+        .test-status.warning { background: #fff3cd; color: #856404; }
+        
+        .score-display {
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+        
+        .score-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .score-excellent { background: #28a745; }
+        .score-good { background: #ffc107; color: #333; }
+        .score-needs-work { background: #fd7e14; }
+        .score-not-ready { background: #dc3545; }
+        
+        .quick-test {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .quick-test h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .url-test {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .url-test input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .url-test button {
+            padding: 0.8rem 1.5rem;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        
+        .quick-result {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .quick-result.success { background: #d4edda; color: #155724; }
+        .quick-result.error { background: #f8d7da; color: #721c24; }
+        
+        .examples {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .examples h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .example-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .example-item:hover {
+            background: #e9ecef;
+        }
+        
+        .example-name {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .example-url {
+            font-family: monospace;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .grid { grid-template-columns: 1fr; }
+            .url-test { flex-direction: column; }
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🧪 API Testing Playground</h1>
+            <p class="subtitle">Test and onboard new services to The Fixer Initiative</p>
+        </div>
+
+        <!-- Quick URL Test -->
+        <div class="quick-test">
+            <h3>Quick Service Test</h3>
+            <p>Enter any URL to quickly test if a service is reachable:</p>
+            <div class="url-test">
+                <input type="url" id="quickUrl" placeholder="https://api.example.com" />
+                <button onclick="quickTest()">Test URL</button>
+            </div>
+            <div id="quickResult" class="quick-result"></div>
+        </div>
+
+        <div class="grid">
+            <!-- Service Configuration -->
+            <div class="card">
+                <h3>Service Configuration</h3>
+                <form id="serviceForm">
+                    <div class="form-group">
+                        <label for="serviceName">Service Name *</label>
+                        <input type="text" id="serviceName" required placeholder="My Awesome API" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType">Service Type *</label>
+                        <select id="serviceType" required>
+                            <option value="">Select type...</option>
+                            <option value="backend">Backend API</option>
+                            <option value="frontend">Frontend App</option>
+                            <option value="microservice">Microservice</option>
+                            <option value="database">Database</option>
+                            <option value="ai-service">AI Service</option>
+                            <option value="payment">Payment Gateway</option>
+                            <option value="analytics">Analytics</option>
+                            <option value="tool">Developer Tool</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceUrl">Primary URL *</label>
+                        <input type="url" id="serviceUrl" required placeholder="https://api.myservice.com" />
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="additionalEndpoints">Additional Endpoints (one per line)</label>
+                        <textarea id="additionalEndpoints" rows="3" placeholder="https://api.myservice.com/v2&#10;https://admin.myservice.com"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servicePurpose">Purpose/Description</label>
+                        <textarea id="servicePurpose" rows="2" placeholder="What does this service do?"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceAccess">Access Level</label>
+                        <select id="serviceAccess">
+                            <option value="public">Public</option>
+                            <option value="authenticated">Authenticated</option>
+                            <option value="enterprise">Enterprise Only</option>
+                            <option value="internal">Internal Only</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="testService()">
+                        <span id="testBtnText">Run Comprehensive Test</span>
+                        <span id="testLoader" class="loading" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Test Results -->
+            <div class="card">
+                <h3>Test Results</h3>
+                <div id="noResults" style="text-align: center; color: #6c757d; padding: 2rem;">
+                    <p>No tests run yet. Configure a service and click "Run Comprehensive Test" to begin.</p>
+                </div>
+                
+                <div id="testResults" class="test-results">
+                    <div class="score-display">
+                        <div id="scoreCircle" class="score-circle">
+                            <span id="scoreValue">0</span>
+                        </div>
+                        <div id="scoreLabel">Service Score</div>
+                    </div>
+                    
+                    <div id="testList"></div>
+                    
+                    <div id="recommendation" style="margin-top: 1.5rem; padding: 1rem; border-radius: 8px;"></div>
+                    
+                    <button id="onboardBtn" class="btn" onclick="onboardService()" style="display: none; margin-top: 1rem;">
+                        Onboard This Service
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example Services -->
+        <div class="examples">
+            <h3>Example Services to Test</h3>
+            <p>Click any example to automatically fill the form:</p>
+            
+            <div class="example-item" onclick="loadExample('github')">
+                <div class="example-name">GitHub API</div>
+                <div class="example-url">https://api.github.com</div>
+            </div>
+            
+            <div class="example-item" onclick="loadExample('jsonplaceholder')">
+                <div class="example-name">JSONPlaceholder (Test API)</div>
+                <div class="example-url">https://jsonplaceholder.typicode.com</div>
+            </div>
+            
+            <div class="example-item" onclick="loadExample('httpbin')">
+                <div class="example-name">HTTPBin (HTTP Testing)</div>
+                <div class="example-url">https://httpbin.org</div>
+            </div>
+            
+            <div class="example-item" onclick="loadExample('memory')">
+                <div class="example-name">Memory Service (Live)</div>
+                <div class="example-url">https://api.lanonasis.com</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentTestResults = null;
+
+        function quickTest() {
+            const url = document.getElementById('quickUrl').value.trim();
+            const resultDiv = document.getElementById('quickResult');
+            
+            if (!url) {
+                alert('Please enter a URL');
+                return;
+            }
+            
+            resultDiv.style.display = 'block';
+            resultDiv.className = 'quick-result';
+            resultDiv.innerHTML = '<div class="loading"></div> Testing...';
+            
+            fetch(`/api/quick-test/${encodeURIComponent(url)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.reachable) {
+                        resultDiv.className = 'quick-result success';
+                        resultDiv.innerHTML = `
+                            ✅ Service is reachable!<br>
+                            Status: ${data.statusCode}<br>
+                            Response Time: ${data.responseTime}ms<br>
+                            Content Type: ${data.contentType || 'Unknown'}
+                        `;
+                    } else {
+                        resultDiv.className = 'quick-result error';
+                        resultDiv.innerHTML = `❌ Service not reachable: ${data.error}`;
+                    }
+                })
+                .catch(error => {
+                    resultDiv.className = 'quick-result error';
+                    resultDiv.innerHTML = `❌ Test failed: ${error.message}`;
+                });
+        }
+
+        function testService() {
+            const config = getServiceConfig();
+            if (!config) return;
+            
+            const testBtn = document.getElementById('testBtnText');
+            const loader = document.getElementById('testLoader');
+            const btn = document.querySelector('#serviceForm .btn');
+            
+            btn.disabled = true;
+            testBtn.style.display = 'none';
+            loader.style.display = 'inline-block';
+            
+            fetch('/api/test-service', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ serviceConfig: config })
+            })
+            .then(response => response.json())
+            .then(data => {
+                currentTestResults = data;
+                displayTestResults(data);
+                
+                btn.disabled = false;
+                testBtn.style.display = 'inline';
+                loader.style.display = 'none';
+            })
+            .catch(error => {
+                alert('Test failed: ' + error.message);
+                
+                btn.disabled = false;
+                testBtn.style.display = 'inline';
+                loader.style.display = 'none';
+            });
+        }
+
+        function getServiceConfig() {
+            const name = document.getElementById('serviceName').value.trim();
+            const type = document.getElementById('serviceType').value;
+            const url = document.getElementById('serviceUrl').value.trim();
+            const purpose = document.getElementById('servicePurpose').value.trim();
+            const access = document.getElementById('serviceAccess').value;
+            const additionalEndpoints = document.getElementById('additionalEndpoints').value
+                .split('\n')
+                .map(line => line.trim())
+                .filter(line => line);
+            
+            if (!name || !type || !url) {
+                alert('Please fill in all required fields');
+                return null;
+            }
+            
+            const endpoints = [url, ...additionalEndpoints];
+            
+            return {
+                name,
+                type,
+                url,
+                endpoints,
+                purpose,
+                access
+            };
+        }
+
+        function displayTestResults(results) {
+            document.getElementById('noResults').style.display = 'none';
+            document.getElementById('testResults').style.display = 'block';
+            
+            // Update score
+            const scoreValue = document.getElementById('scoreValue');
+            const scoreCircle = document.getElementById('scoreCircle');
+            
+            scoreValue.textContent = results.overallScore;
+            
+            // Set score color
+            scoreCircle.className = 'score-circle';
+            if (results.overallScore >= 90) scoreCircle.classList.add('score-excellent');
+            else if (results.overallScore >= 70) scoreCircle.classList.add('score-good');
+            else if (results.overallScore >= 50) scoreCircle.classList.add('score-needs-work');
+            else scoreCircle.classList.add('score-not-ready');
+            
+            // Update test list
+            const testList = document.getElementById('testList');
+            testList.innerHTML = '';
+            
+            for (const [testName, test] of Object.entries(results.tests)) {
+                const testItem = document.createElement('div');
+                testItem.className = 'test-item';
+                testItem.innerHTML = `
+                    <span class="test-name">${test.name}</span>
+                    <span class="test-status ${test.status}">${test.status.toUpperCase()}</span>
+                `;
+                testList.appendChild(testItem);
+            }
+            
+            // Update recommendation
+            const recommendation = document.getElementById('recommendation');
+            const rec = results.recommendation;
+            
+            let bgColor = '#f8f9fa';
+            if (rec.level === 'excellent') bgColor = '#d4edda';
+            else if (rec.level === 'good') bgColor = '#fff3cd';
+            else if (rec.level === 'needs-work') bgColor = '#ffe8cc';
+            else bgColor = '#f8d7da';
+            
+            recommendation.style.background = bgColor;
+            recommendation.innerHTML = `
+                <h4>Recommendation: ${rec.level.replace('-', ' ').toUpperCase()}</h4>
+                <p>${rec.message}</p>
+                <ul>
+                    ${rec.actions.map(action => `<li>${action}</li>`).join('')}
+                </ul>
+            `;
+            
+            // Show onboard button if score is good enough
+            const onboardBtn = document.getElementById('onboardBtn');
+            if (results.overallScore >= 50) {
+                onboardBtn.style.display = 'block';
+            } else {
+                onboardBtn.style.display = 'none';
+            }
+        }
+
+        function onboardService() {
+            if (!currentTestResults) {
+                alert('No test results available');
+                return;
+            }
+            
+            const config = getServiceConfig();
+            if (!config) return;
+            
+            if (confirm(`Onboard "${config.name}" to The Fixer Initiative monitoring system?`)) {
+                fetch('/api/onboard-service', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ serviceConfig: config })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Service onboarded successfully! It will appear in the monitoring dashboard.');
+                    } else {
+                        alert('Onboarding failed: ' + (data.error || 'Unknown error'));
+                    }
+                })
+                .catch(error => {
+                    alert('Onboarding failed: ' + error.message);
+                });
+            }
+        }
+
+        function loadExample(type) {
+            const examples = {
+                github: {
+                    name: 'GitHub API',
+                    type: 'backend',
+                    url: 'https://api.github.com',
+                    purpose: 'GitHub REST API for repository management',
+                    access: 'public'
+                },
+                jsonplaceholder: {
+                    name: 'JSONPlaceholder',
+                    type: 'backend',
+                    url: 'https://jsonplaceholder.typicode.com',
+                    purpose: 'Free fake REST API for testing and prototyping',
+                    access: 'public'
+                },
+                httpbin: {
+                    name: 'HTTPBin',
+                    type: 'tool',
+                    url: 'https://httpbin.org',
+                    purpose: 'HTTP testing service',
+                    access: 'public'
+                },
+                memory: {
+                    name: 'Memory as a Service',
+                    type: 'backend',
+                    url: 'https://api.lanonasis.com',
+                    purpose: 'Vector memory storage with AI integration',
+                    access: 'authenticated'
+                }
+            };
+            
+            const example = examples[type];
+            if (example) {
+                document.getElementById('serviceName').value = example.name;
+                document.getElementById('serviceType').value = example.type;
+                document.getElementById('serviceUrl').value = example.url;
+                document.getElementById('servicePurpose').value = example.purpose;
+                document.getElementById('serviceAccess').value = example.access;
+            }
+        }
+
+        // Allow Enter key to trigger quick test
+        document.getElementById('quickUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                quickTest();
+            }
+        });
+    </script>
+</body>
+</html>

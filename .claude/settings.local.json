@@ -3,7 +3,11 @@
     "allow": [
       "Bash(find:*)",
       "Bash(ls:*)",
-      "Bash(ssh:*)"
+      "Bash(ssh:*)",
+      "mcp__hostinger-api__domains_checkDomainAvailabilityV1",
+      "Bash(netlify dns:*)",
+      "Bash(netlify sites:list:*)",
+      "Bash(netlify api:*)"
     ],
     "deny": []
   }
