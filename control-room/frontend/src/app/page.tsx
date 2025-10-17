@@ -36,7 +36,7 @@ export default function HomePage() {
   }
 
   if (!user) {
-    router.push('/auth/signin')
+    router.push('/handler/sign-in')
     return null
   }
 

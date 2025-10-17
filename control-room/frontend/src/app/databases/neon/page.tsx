@@ -68,7 +68,7 @@ export default function NeonPage() {
         responseTime: newResult.responseTime,
         lastChecked: newResult.timestamp
       }))
-    } catch (error) {
+    } catch (_error) {
       const newResult = {
         timestamp: new Date().toISOString(),
         status: 'error',

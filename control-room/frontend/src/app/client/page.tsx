@@ -11,7 +11,6 @@ import {
   MoreVertical, 
   Key, 
   Eye, 
-  EyeOff,
   Edit,
   Trash2,
   CheckCircle,
@@ -116,12 +115,12 @@ export default function ClientManagement() {
   const [apiKeys, setApiKeys] = useState<ClientApiKey[]>(mockApiKeys)
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedClient, setSelectedClient] = useState<ClientOrganization | null>(null)
-  const [showApiKeys, setShowApiKeys] = useState(false)
-  const [showCreateClient, setShowCreateClient] = useState(false)
+  // const [showApiKeys, setShowApiKeys] = useState(false)
+  // const [showCreateClient, setShowCreateClient] = useState(false)
 
   useEffect(() => {
     if (!loading && !user) {
-      router.push('/login')
+      router.push('/handler/sign-in')
     }
   }, [user, loading, router])
 
@@ -191,7 +190,7 @@ export default function ClientManagement() {
             </p>
           </div>
           <button
-            onClick={() => setShowCreateClient(true)}
+            onClick={() => {/* TODO: implement create client */}}
             className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           >
             <Plus className="h-4 w-4 mr-2" />

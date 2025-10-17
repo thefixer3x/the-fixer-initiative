@@ -73,7 +73,7 @@ export default function UsageAnalytics() {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push('/login')
+            router.push('/handler/sign-in')
         }
     }, [user, loading, router])
 

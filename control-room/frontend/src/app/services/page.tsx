@@ -113,7 +113,7 @@ export default function ServicesPage() {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push('/login')
+            router.push('/handler/sign-in')
         }
     }, [user, loading, router])
 

@@ -112,7 +112,7 @@ export default function TransactionsPage() {
 
     useEffect(() => {
         if (!loading && !user) {
-            router.push('/login')
+            router.push('/handler/sign-in')
         }
     }, [user, loading, router])
 

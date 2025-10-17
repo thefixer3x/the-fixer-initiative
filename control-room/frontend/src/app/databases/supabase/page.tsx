@@ -17,7 +17,7 @@ interface SupabaseMetrics {
 export default function SupabasePage() {
   const { user } = useAuth()
   const router = useRouter()
-  const [metrics, setMetrics] = useState<SupabaseMetrics>({
+  const [metrics] = useState<SupabaseMetrics>({
     totalTables: 15,
     totalUsers: 1247,
     connectionStatus: 'healthy',
@@ -39,7 +39,7 @@ export default function SupabasePage() {
         message: 'Connection successful'
       }
       setTestResults(prev => [newResult, ...prev.slice(0, 4)])
-    } catch (error) {
+    } catch (_error) {
       const newResult = {
         timestamp: new Date().toISOString(),
         status: 'error',
