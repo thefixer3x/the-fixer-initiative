@@ -5,7 +5,6 @@ import { useAuth } from '@/contexts/StackAuthContext'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import {
-    Activity,
     CheckCircle,
     XCircle,
     Clock,

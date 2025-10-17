@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import {
     Search,
-    Filter,
     Download,
     RefreshCw,
     CheckCircle,
@@ -104,7 +103,7 @@ const clientNames: Record<string, string> = {
 export default function TransactionsPage() {
     const { user, loading } = useAuth()
     const router = useRouter()
-    const [transactions, setTransactions] = useState<ClientTransaction[]>(mockTransactions)
+    const [transactions] = useState<ClientTransaction[]>(mockTransactions)
     const [searchTerm, setSearchTerm] = useState('')
     const [statusFilter, setStatusFilter] = useState('all')
     const [typeFilter, setTypeFilter] = useState('all')

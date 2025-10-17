@@ -50,11 +50,15 @@ class MultiDatabaseManager {
             const neonSql = neon(neonDatabaseUrl)
 
             this.connections.set('neon-enhanced', {
-                execute: async (_query: string, _params?: unknown[]) => {
+                execute: async (query: string, params?: unknown[]) => {
+                    void query
+                    void params
                     // For now, use a simple health check query
                     return await neonSql`SELECT 1 as health_check`
                 },
-                query: async (_query: string, _params?: unknown[]) => {
+                query: async (query: string, params?: unknown[]) => {
+                    void query
+                    void params
                     // For now, use a simple health check query  
                     return await neonSql`SELECT 1 as health_check`
                 }
@@ -102,7 +106,7 @@ class MultiDatabaseManager {
     }
 
     // Execute query on specific database provider
-    async executeQuery(providerId: string, query: string, params?: any[]): Promise<any> {
+    async executeQuery(providerId: string, query: string, params?: unknown[]): Promise<unknown> {
         const connection = this.connections.get(providerId)
         if (!connection) {
             throw new Error(`Database provider ${providerId} not found`)
@@ -221,10 +225,21 @@ class MultiDatabaseManager {
       WHERE schema_name NOT IN ('information_schema', 'pg_catalog', 'pg_toast')
     `)
 
+        const tableCount = (Array.isArray(tablesResult) ? tablesResult : []).reduce<number>((sum, row) => {
+            if (typeof row === 'object' && row !== null && 'table_count' in row) {
+                const countValue = (row as { table_count?: unknown }).table_count
+                const numericCount = Number(countValue)
+                return sum + (Number.isFinite(numericCount) ? numericCount : 0)
+            }
+            return sum
+        }, 0)
+
+        const schemaCount = Array.isArray(schemasResult) ? schemasResult.length : 0
+
         return {
-            tableCount: tablesResult.reduce((sum: number, row: any) => sum + parseInt(row.table_count), 0),
+            tableCount,
             recordCount: 0, // Would need specific queries
-            schemaCount: schemasResult.length
+            schemaCount
         }
     }
 
@@ -232,8 +247,8 @@ class MultiDatabaseManager {
     async executeCrossQuery(queries: Array<{
         providerId: string
         query: string
-        params?: any[]
-    }>): Promise<Array<{ providerId: string, result: any, success: boolean, error?: string }>> {
+        params?: unknown[]
+    }>): Promise<Array<{ providerId: string, result: unknown, success: boolean, error?: string }>> {
 
         const results = await Promise.allSettled(
             queries.map(async ({ providerId, query, params }) => ({

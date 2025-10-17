@@ -39,7 +39,7 @@ export default function SupabasePage() {
         message: 'Connection successful'
       }
       setTestResults(prev => [newResult, ...prev.slice(0, 4)])
-    } catch (_error) {
+    } catch {
       const newResult = {
         timestamp: new Date().toISOString(),
         status: 'error',

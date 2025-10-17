@@ -8,7 +8,6 @@ import {
     Code,
     Copy,
     Check,
-    ExternalLink,
     Key,
     CreditCard,
     ArrowUpDown,
@@ -17,22 +16,30 @@ import {
 } from 'lucide-react'
 import { toast } from 'sonner'
 
+type ExampleValue = string | Record<string, unknown>
+
+interface ApiExampleObject {
+    request?: ExampleValue
+    response?: ExampleValue
+    url?: string
+    description?: string
+}
+
+type ApiExample = ApiExampleObject | string
+
+interface ApiParameter {
+    name: string
+    type: string
+    required: boolean
+    description: string
+}
+
 interface ApiEndpoint {
     method: string
     path: string
     description: string
-    parameters?: Array<{
-        name: string
-        type: string
-        required: boolean
-        description: string
-    }>
-    example?: {
-        request?: any
-        response?: any
-        url?: string
-        description?: string
-    } | string
+    parameters?: ApiParameter[]
+    example?: ApiExample
 }
 
 interface ApiCategory {
@@ -336,6 +343,12 @@ const apiEndpoints: ApiCategory[] = [
     }
 ]
 
+const isExampleObject = (example: ApiExample | undefined): example is ApiExampleObject =>
+    typeof example === 'object' && example !== null
+
+const formatExampleValue = (value: ExampleValue) =>
+    typeof value === 'string' ? value : JSON.stringify(value, null, 2)
+
 export default function APIDocumentation() {
     const { user, loading } = useAuth()
     const router = useRouter()
@@ -421,23 +434,36 @@ export default function APIDocumentation() {
                         </div>
 
                         <div className="divide-y divide-gray-200">
-                            {category.endpoints.map((endpoint, endpointIndex) => (
-                                <div key={endpointIndex} className="p-6">
-                                    <div className="flex items-start justify-between">
-                                        <div className="flex-1">
-                                            <div className="flex items-center space-x-3">
-                                                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded ${getMethodColor(endpoint.method)}`}>
-                                                    {endpoint.method}
-                                                </span>
-                                                <code className="text-sm font-mono text-gray-900">{endpoint.path}</code>
-                                            </div>
-                                            <p className="mt-2 text-sm text-gray-600">{endpoint.description}</p>
+                            {category.endpoints.map((endpoint, endpointIndex) => {
+                                const example = endpoint.example
+                                const exampleObject = isExampleObject(example) ? example : undefined
+                                const exampleDescription = exampleObject?.description
+                                const requestExample = exampleObject?.request
+                                const responseExample = exampleObject?.response
+                                const urlExample = exampleObject?.url
+                                const requestText = requestExample ? formatExampleValue(requestExample) : null
+                                const responseText = responseExample ? formatExampleValue(responseExample) : null
+                                const requestCopyId = `request-${categoryIndex}-${endpointIndex}`
+                                const responseCopyId = `response-${categoryIndex}-${endpointIndex}`
+                                const urlCopyId = `url-${categoryIndex}-${endpointIndex}`
 
-                                            {/* Parameters */}
-                                            {endpoint.parameters && Array.isArray(endpoint.parameters) && (
-                                                <div className="mt-4">
-                                                    <h4 className="text-sm font-medium text-gray-900 mb-2">Parameters</h4>
-                                                    <div className="overflow-x-auto">
+                                return (
+                                    <div key={endpointIndex} className="p-6">
+                                        <div className="flex items-start justify-between">
+                                            <div className="flex-1">
+                                                <div className="flex items-center space-x-3">
+                                                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded ${getMethodColor(endpoint.method)}`}>
+                                                        {endpoint.method}
+                                                    </span>
+                                                    <code className="text-sm font-mono text-gray-900">{endpoint.path}</code>
+                                                </div>
+                                                <p className="mt-2 text-sm text-gray-600">{endpoint.description}</p>
+
+                                                {/* Parameters */}
+                                                {endpoint.parameters && Array.isArray(endpoint.parameters) && (
+                                                    <div className="mt-4">
+                                                        <h4 className="text-sm font-medium text-gray-900 mb-2">Parameters</h4>
+                                                        <div className="overflow-x-auto">
                                                         <table className="min-w-full divide-y divide-gray-200">
                                                             <thead className="bg-gray-50">
                                                                 <tr>
@@ -448,7 +474,7 @@ export default function APIDocumentation() {
                                                                 </tr>
                                                             </thead>
                                                             <tbody className="bg-white divide-y divide-gray-200">
-                                                                {endpoint.parameters.map((param: any, paramIndex: number) => (
+                                                                {endpoint.parameters.map((param, paramIndex) => (
                                                                     <tr key={paramIndex}>
                                                                         <td className="px-3 py-2 text-sm font-mono text-gray-900">{param.name}</td>
                                                                         <td className="px-3 py-2 text-sm text-gray-500">{param.type}</td>
@@ -473,28 +499,22 @@ export default function APIDocumentation() {
                                                 <div className="mt-4">
                                                     <h4 className="text-sm font-medium text-gray-900 mb-2">Example</h4>
                                                     <div className="space-y-4">
-                                                        {typeof endpoint.example === 'object' && endpoint.example && 'request' in endpoint.example && endpoint.example.request && (
+                                                        {exampleDescription && (
+                                                            <p className="text-sm text-gray-500">{exampleDescription}</p>
+                                                        )}
+
+                                                        {requestText && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Request</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                                                                        <code>
-                                                                            {typeof (endpoint.example as any).request === 'string'
-                                                                                ? (endpoint.example as any).request
-                                                                                : JSON.stringify((endpoint.example as any).request, null, 2)
-                                                                            }
-                                                                        </code>
+                                                                        <code>{requestText}</code>
                                                                     </pre>
                                                                     <button
-                                                                        onClick={() => copyToClipboard(
-                                                                            typeof (endpoint.example as any).request === 'string'
-                                                                                ? (endpoint.example as any).request
-                                                                                : JSON.stringify((endpoint.example as any).request, null, 2),
-                                                                            `request-${categoryIndex}-${endpointIndex}`
-                                                                        )}
+                                                                        onClick={() => copyToClipboard(requestText, requestCopyId)}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
                                                                     >
-                                                                        {copiedCode === `request-${categoryIndex}-${endpointIndex}` ? (
+                                                                        {copiedCode === requestCopyId ? (
                                                                             <Check className="h-4 w-4" />
                                                                         ) : (
                                                                             <Copy className="h-4 w-4" />
@@ -504,28 +524,18 @@ export default function APIDocumentation() {
                                                             </div>
                                                         )}
 
-                                                        {typeof endpoint.example === 'object' && endpoint.example && 'response' in endpoint.example && endpoint.example.response && (
+                                                        {responseText && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Response</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                                                                        <code>
-                                                                            {typeof (endpoint.example as any).response === 'string'
-                                                                                ? (endpoint.example as any).response
-                                                                                : JSON.stringify((endpoint.example as any).response, null, 2)
-                                                                            }
-                                                                        </code>
+                                                                        <code>{responseText}</code>
                                                                     </pre>
                                                                     <button
-                                                                        onClick={() => copyToClipboard(
-                                                                            typeof (endpoint.example as any).response === 'string'
-                                                                                ? (endpoint.example as any).response
-                                                                                : JSON.stringify((endpoint.example as any).response, null, 2),
-                                                                            `response-${categoryIndex}-${endpointIndex}`
-                                                                        )}
+                                                                        onClick={() => copyToClipboard(responseText, responseCopyId)}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
                                                                     >
-                                                                        {copiedCode === `response-${categoryIndex}-${endpointIndex}` ? (
+                                                                        {copiedCode === responseCopyId ? (
                                                                             <Check className="h-4 w-4" />
                                                                         ) : (
                                                                             <Copy className="h-4 w-4" />
@@ -535,18 +545,18 @@ export default function APIDocumentation() {
                                                             </div>
                                                         )}
 
-                                                        {typeof endpoint.example === 'object' && endpoint.example && 'url' in endpoint.example && endpoint.example.url && (
+                                                        {urlExample && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Webhook URL</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                                                                        <code>{(endpoint.example as any).url}</code>
+                                                                        <code>{urlExample}</code>
                                                                     </pre>
                                                                     <button
-                                                                        onClick={() => copyToClipboard((endpoint.example as any).url, `url-${categoryIndex}-${endpointIndex}`)}
+                                                                        onClick={() => copyToClipboard(urlExample, urlCopyId)}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
                                                                     >
-                                                                        {copiedCode === `url-${categoryIndex}-${endpointIndex}` ? (
+                                                                        {copiedCode === urlCopyId ? (
                                                                             <Check className="h-4 w-4" />
                                                                         ) : (
                                                                             <Copy className="h-4 w-4" />
@@ -556,15 +566,15 @@ export default function APIDocumentation() {
                                                             </div>
                                                         )}
 
-                                                        {typeof endpoint.example === 'string' && (
+                                                        {typeof example === 'string' && (
                                                             <div>
                                                                 <h5 className="text-xs font-medium text-gray-700 mb-1">Example</h5>
                                                                 <div className="relative">
                                                                     <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg overflow-x-auto text-sm">
-                                                                        <code>{endpoint.example}</code>
+                                                                        <code>{example}</code>
                                                                     </pre>
                                                                     <button
-                                                                        onClick={() => copyToClipboard(endpoint.example as string, `example-${categoryIndex}-${endpointIndex}`)}
+                                                                        onClick={() => copyToClipboard(example, `example-${categoryIndex}-${endpointIndex}`)}
                                                                         className="absolute top-2 right-2 p-1 text-gray-400 hover:text-gray-200"
                                                                     >
                                                                         {copiedCode === `example-${categoryIndex}-${endpointIndex}` ? (
@@ -576,13 +586,14 @@ export default function APIDocumentation() {
                                                                 </div>
                                                             </div>
                                                         )}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                )
+                            })}
                         </div>
                     </div>
                 ))}

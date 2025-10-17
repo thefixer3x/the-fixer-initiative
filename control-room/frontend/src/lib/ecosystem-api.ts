@@ -34,7 +34,7 @@ class EcosystemAPIClient {
     seftecStore: process.env.NEXT_PUBLIC_SEFTEC_STORE_API_URL || 'https://dev.connectionpoint.tech/v1/apps/seftec-shop'
   }
 
-  private async fetchWithFallback(url: string, fallbackData: any) {
+  private async fetchWithFallback<T>(url: string, fallbackData: T): Promise<T> {
     try {
       const response = await fetch(url, {
         headers: {
@@ -48,7 +48,7 @@ class EcosystemAPIClient {
         throw new Error(`HTTP error! status: ${response.status}`)
       }
       
-      return await response.json()
+      return await response.json() as T
     } catch (error) {
       console.warn(`Failed to fetch from ${url}, using fallback data:`, error)
       return fallbackData
