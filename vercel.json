@@ -1,6 +1,3 @@
 {
-  "buildCommand": "cd control-room/frontend && npm run build",
-  "devCommand": "cd control-room/frontend && npm run dev",
-  "installCommand": "npm install && cd control-room/frontend && npm install",
-  "outputDirectory": "control-room/frontend/.next"
+  "$schema": "https://openapi.vercel.sh/vercel.json"
 }

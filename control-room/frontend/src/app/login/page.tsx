@@ -49,13 +49,6 @@ export default function LoginPage() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in to access the control dashboard
           </p>
-          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-800">
-              <strong>Demo Credentials:</strong><br />
-              Email: admin@fixer-initiative.com<br />
-              Password: admin123
-            </p>
-          </div>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
