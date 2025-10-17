@@ -21,17 +21,18 @@ function ClientDate() {
 
   return <div className="text-sm text-gray-500">{currentDate}</div>
 }
-import { 
-  LayoutDashboard, 
-  Users, 
-  CreditCard, 
-  FileText, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Users,
+  CreditCard,
+  FileText,
+  BarChart3,
   LogOut,
   Menu,
   X,
   Shield,
-  Activity
+  Activity,
+  Settings
 } from 'lucide-react'
 
 const navigation = [
@@ -41,6 +42,7 @@ const navigation = [
   { name: 'Analytics', href: '/usage', icon: BarChart3 },
   { name: 'API Docs', href: '/docs', icon: FileText },
   { name: 'Services', href: '/services', icon: Activity },
+  { name: 'Admin', href: '/admin/dashboard', icon: Settings },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -73,11 +75,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    isActive
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
+                    }`}
                 >
                   <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
                   {item.name}
@@ -123,11 +124,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                    isActive
+                  className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive
                       ? 'bg-blue-100 text-blue-700'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
+                    }`}
                 >
                   <item.icon className="mr-3 h-5 w-5 flex-shrink-0" />
                   {item.name}
