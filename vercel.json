@@ -1,14 +1,6 @@
 {
-  "builds": [
-    {
-      "src": "control-room/frontend/package.json",
-      "use": "@vercel/next"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "control-room/frontend/$1"
-    }
-  ]
+  "buildCommand": "cd control-room/frontend && npm run build",
+  "devCommand": "cd control-room/frontend && npm run dev",
+  "installCommand": "npm install && cd control-room/frontend && npm install",
+  "outputDirectory": "control-room/frontend/.next"
 }
