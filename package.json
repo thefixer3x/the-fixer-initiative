@@ -4,6 +4,10 @@
   "description": "Central control room and aggregator for the complete ecosystem of interconnected platforms and services.",
   "main": "webhook-test-server.js",
   "scripts": {
+    "dev": "cd control-room/frontend && npm run dev",
+    "build": "cd control-room/frontend && npm run build",
+    "start": "cd control-room/frontend && npm run start",
+    "install:frontend": "cd control-room/frontend && npm install",
     "test": "echo \"Error: no test specified\" && exit 1",
     "webhook-test": "node webhook-test-server.js"
   },

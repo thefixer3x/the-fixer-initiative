@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Control Room Frontend
 
-## Getting Started
+The Control Room Dashboard is a Next.js 15 application that provides a centralized interface for managing multiple databases and services across The Fixer Initiative ecosystem.
 
-First, run the development server:
+## Features
+
+- **Multi-Database Management**: Connect and manage Supabase and Neon databases
+- **Real-time Metrics**: Monitor performance, users, revenue, and health status
+- **Secure Authentication**: Supabase Auth integration
+- **Responsive Design**: Works on desktop and mobile
+- **Modern Stack**: Next.js 15, React 19, TypeScript, Tailwind CSS 4
+
+## Quick Start
+
+### From Project Root
 
 ```bash
+# Install dependencies
+npm run install:frontend
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### From Frontend Directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+cd control-room/frontend
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
+
+## Environment Setup
+
+A `.env.local` file has been created with Supabase credentials. Verify it contains:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://hjplkyeuycajchayuylw.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+## Authentication
+
+The dashboard uses Supabase Authentication. Create a test user in Supabase dashboard:
+
+- Navigate to Authentication > Users > Add User
+- Or sign up through the `/login` page
+
+## Available Routes
+
+- `/` - Dashboard home
+- `/login` - Sign in page
+- `/databases/supabase` - Supabase management
+- `/databases/neon` - Neon management
+- `/transactions` - Transaction monitoring
+- `/services` - Service management
+- `/usage` - Usage analytics
+- `/client` - Client management
+
+## Tech Stack
+
+- Next.js 15 with App Router
+- React 19
+- TypeScript
+- Tailwind CSS 4
+- Supabase for auth & database
+- Lucide React icons
+- Recharts for data viz
+
+## Troubleshooting
+
+**"next: command not found"**
+```bash
+cd control-room/frontend && npm install
+```
+
+**Database connection errors**
+- Check `.env.local` credentials
+- Verify Supabase project is active
+- Confirm IP allowlist in Supabase settings
+
+**Build issues**
+```bash
+rm -rf .next
+npm run build
+```
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Supabase Documentation](https://supabase.com/docs)
+- [PROJECT_DISRUPTOR_EXECUTION_STATUS.md](../../PROJECT_DISRUPTOR_EXECUTION_STATUS.md)
+- [DATABASE_ONBOARDING_GUIDE.md](../../DATABASE_ONBOARDING_GUIDE.md)

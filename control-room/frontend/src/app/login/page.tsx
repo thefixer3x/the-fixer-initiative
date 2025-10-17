@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/StackAuthContext'
+import { useAuth } from '@/contexts/SimpleAuthContext'
 import { Shield, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
 

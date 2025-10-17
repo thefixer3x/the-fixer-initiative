@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/StackAuthContext'
+import { useAuth } from '@/contexts/SimpleAuthContext'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Database, Server, Activity, ExternalLink, Users, TrendingUp } from 'lucide-react'
@@ -36,7 +36,7 @@ export default function HomePage() {
   }
 
   if (!user) {
-    router.push('/handler/sign-in')
+    router.push('/login')
     return null
   }
 
