@@ -11,19 +11,18 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn('Supabase credentials not found. Authentication will use mock mode.')
 }
 
-export const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder-key')
+// Create ONE browser auth client only
+export const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder-key', {
+  auth: {
+    // Optional: set a custom storage key to avoid collisions across apps on same domain
+    storageKey: 'fixer-control-room-auth',
+    autoRefreshToken: true,
+    persistSession: true,
+  },
+})
 
-// For server-side operations on Supabase
-export const supabaseAdmin = createClient(
-  supabaseUrl || 'https://placeholder.supabase.co',
-  process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key',
-  {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  }
-)
+// NOTE: Do NOT create a service-role/admin client in this browser bundle.
+// Import admin client from './supabase-admin' in server-only code.
 
 // Enhanced Neon Database Configuration (Multi-Schema Architecture)
 export const neonDatabaseUrl = process.env.NEON_DATABASE_URL || ''

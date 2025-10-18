@@ -1,8 +1,11 @@
 // Multi-Database API Service
 // Supports both original Supabase and enhanced Neon architectures
-import { supabase, supabaseAdmin } from './supabase'
+import { supabase } from './supabase'
 import { multiDB } from './multi-database'
 import { ControlRoomApp, ClientOrganization, UserProfile } from './types'
+
+// IMPORTANT: Do not import supabaseAdmin at the top level to avoid bundling it to the client.
+// Dynamically import it inside server-only logic when needed.
 
 export class MultiDatabaseAPI {
 
@@ -81,39 +84,33 @@ export class MultiDatabaseAPI {
 
     // Cross-Schema Analytics
     static async getDashboardMetrics() {
-        try {
-            const [
-                appsResult,
-                orgsResult,
-                profilesResult,
-                authUsersResult
-            ] = await Promise.all([
-                supabase.from('apps').select('id, status').eq('status', 'active'),
-                supabase.from('organizations').select('id, status').eq('status', 'active'),
-                supabase.from('profiles').select('id'),
-                supabaseAdmin.from('users').select('id')
-            ])
+        // Use supabaseAdmin only on the server
+        let authUsersCount = 0
+        if (typeof window === 'undefined') {
+            const { supabaseAdmin } = await import('./supabase-admin')
+            const { data: authUsersData, error: authErr } = await supabaseAdmin.from('users').select('id')
+            if (!authErr) {
+                authUsersCount = authUsersData?.length || 0
+            }
+        }
 
-            return {
-                totalApps: appsResult.data?.length || 0,
-                activeApps: appsResult.data?.filter((app: { status: string }) => app.status === 'active').length || 0,
-                totalOrganizations: orgsResult.data?.length || 0,
-                activeOrganizations: orgsResult.data?.filter((org: { status: string }) => org.status === 'active').length || 0,
-                totalProfiles: profilesResult.data?.length || 0,
-                totalUsers: authUsersResult.data?.length || 0,
-                lastUpdated: new Date().toISOString()
-            }
-        } catch (error) {
-            console.error('Error fetching dashboard metrics:', error)
-            return {
-                totalApps: 0,
-                activeApps: 0,
-                totalOrganizations: 0,
-                activeOrganizations: 0,
-                totalProfiles: 0,
-                totalUsers: 0,
-                lastUpdated: new Date().toISOString()
-            }
+        const [
+            appsResult,
+            orgsResult,
+            profilesResult,
+        ] = await Promise.all([
+            supabase.from('apps').select('id, status').eq('status', 'active'),
+            supabase.from('organizations').select('id, status').eq('status', 'active'),
+            supabase.from('profiles').select('id'),
+        ])
+
+        return {
+            totalApps: appsResult.data?.length || 0,
+            activeApps: appsResult.data?.filter((app: { status: string }) => app.status === 'active').length || 0,
+            totalOrganizations: orgsResult.data?.length || 0,
+            activeOrganizations: orgsResult.data?.filter((org: { status: string }) => org.status === 'active').length || 0,
+            totalProfiles: profilesResult.data?.length || 0,
+            totalAuthUsers: authUsersCount, // server-only metric
         }
     }
 
@@ -206,9 +203,13 @@ export class MultiDatabaseAPI {
     }
 
     static async getSupabaseUsers() {
-        const { data, error } = await supabaseAdmin.auth.admin.listUsers()
-        if (error) throw error
-        return data.users || []
+        if (typeof window === 'undefined') {
+            const { supabaseAdmin } = await import('./supabase-admin')
+            const { data, error } = await supabaseAdmin.auth.admin.listUsers()
+            if (error) throw error
+            return data.users || []
+        }
+        return []
     }
 
     // Cross-Database Analytics
