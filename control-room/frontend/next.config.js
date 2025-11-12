@@ -1,31 +1,36 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    eslint: {
-        // Disable ESLint during builds
-        ignoreDuringBuilds: true,
-    },
+    // Next.js 16 compatibility
     experimental: {
         optimizePackageImports: ['lucide-react', 'recharts'],
     },
+    
+    // Updated images config for Next.js 16
     images: {
-        domains: ['localhost', '127.0.0.1'],
+        remotePatterns: [
+            {
+                protocol: 'http',
+                hostname: 'localhost',
+            },
+            {
+                protocol: 'http',
+                hostname: '127.0.0.1',
+            },
+        ],
     },
-    // Font optimization is enabled by default in Next.js 15
-    // Handle font loading timeouts
-    webpack: (config, { isServer }) => {
-        if (!isServer) {
-            config.resolve.fallback = {
-                ...config.resolve.fallback,
-                fs: false,
-            };
-        }
-        return config;
+    
+    // Turbopack configuration (required for Next.js 16)
+    turbopack: {
+        // Empty config to silence the warning
+        // Add custom Turbopack config here if needed
     },
+    
     // Environment variables
     env: {
         CUSTOM_KEY: process.env.CUSTOM_KEY,
     },
-    // Headers for better performance
+    
+    // Security headers
     async headers() {
         return [
             {
