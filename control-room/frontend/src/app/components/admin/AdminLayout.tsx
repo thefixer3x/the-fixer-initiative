@@ -11,6 +11,8 @@ import {
 } from '@radix-ui/react-icons';
 import { AdminNavigation } from './AdminNavigation';
 import { useAuth } from '@/contexts/SimpleAuthContext';
+import { DatabaseSwitcher } from '@/components/DatabaseSwitcher';
+import { DatabaseProvider } from '@/contexts/DatabaseContext';
 
 export default function AdminLayout({
     children,
@@ -34,6 +36,7 @@ export default function AdminLayout({
     }, [pathname]);
 
     return (
+        <DatabaseProvider>
         <div className="flex h-screen bg-gray-50">
             {/* Mobile sidebar toggle button */}
             <button
@@ -66,10 +69,8 @@ export default function AdminLayout({
                                 <p className="text-sm text-gray-500">Multi-Database Admin Interface</p>
                             </div>
                             <div className="flex items-center space-x-4">
-                                {/* Database Selector - Placeholder for Phase 3 */}
-                                <div className="px-3 py-1 bg-green-50 border border-green-200 rounded-md">
-                                    <span className="text-xs font-medium text-green-700">● Supabase</span>
-                                </div>
+                                {/* Database Selector */}
+                                <DatabaseSwitcher />
                                 
                                 {/* User Profile */}
                                 <div className="flex items-center space-x-2">
@@ -123,5 +124,6 @@ export default function AdminLayout({
                 ></div>
             )}
         </div>
+        </DatabaseProvider>
     );
 }

@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { Plus, Search, Edit, Trash2, Eye, RefreshCw } from 'lucide-react'
 import MultiDatabaseAPI from '@/lib/neon-api'
 import type { ControlRoomApp } from '@/lib/types'
 import { ErrorDisplay } from '@/components/ErrorBoundary'
+import { useRealtime } from '@/hooks/useRealtime'
+import { RealtimeStatus } from '@/components/RealtimeIndicator'
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<ControlRoomApp[]>([])
@@ -32,6 +34,28 @@ export default function ProjectsPage() {
     fetchProjects()
   }, [])
 
+  // Real-time subscription for projects
+  const handleInsert = useCallback((newProject: ControlRoomApp) => {
+    setProjects((prev) => [newProject, ...prev])
+  }, [])
+
+  const handleUpdate = useCallback((payload: { old: ControlRoomApp; new: ControlRoomApp }) => {
+    setProjects((prev) =>
+      prev.map((project) => (project.id === payload.new.id ? payload.new : project))
+    )
+  }, [])
+
+  const handleDelete = useCallback((deletedProject: ControlRoomApp) => {
+    setProjects((prev) => prev.filter((project) => project.id !== deletedProject.id))
+  }, [])
+
+  const { isConnected: realtimeConnected } = useRealtime<ControlRoomApp>({
+    table: 'apps',
+    onInsert: handleInsert,
+    onUpdate: handleUpdate,
+    onDelete: handleDelete,
+  })
+
   // Filter projects
   const filteredProjects = projects.filter((project) => {
     const matchesSearch = project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -53,7 +77,10 @@ export default function ProjectsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-2xl font-semibold text-gray-900">Projects</h1>
+            <RealtimeStatus isConnected={realtimeConnected} tableName="apps" />
+          </div>
           <p className="mt-1 text-sm text-gray-500">
             Manage all control room applications and projects
           </p>

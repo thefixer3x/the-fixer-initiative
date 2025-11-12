@@ -105,6 +105,60 @@ class MultiDatabaseManager {
         return provider
     }
 
+    // Get list of available database providers
+    getAvailableProviders(): DatabaseProvider[] {
+        const providers: DatabaseProvider[] = []
+
+        // Check if Supabase is available
+        if (this.connections.has('supabase-main')) {
+            providers.push({
+                id: 'supabase',
+                name: 'Supabase',
+                type: 'supabase',
+                status: 'connected',
+                connection: null,
+                schemas: ['public'],
+                lastSync: new Date().toISOString()
+            })
+        }
+
+        // Check if Neon is available
+        if (this.connections.has('neon-enhanced')) {
+            providers.push({
+                id: 'neon',
+                name: 'Neon',
+                type: 'neon',
+                status: 'connected',
+                connection: null,
+                schemas: ['public'],
+                lastSync: new Date().toISOString()
+            })
+        }
+
+        return providers
+    }
+
+    // Test connection to a specific provider
+    async testConnection(providerId: string): Promise<boolean> {
+        const connectionId = providerId === 'supabase' ? 'supabase-main' : 
+                            providerId === 'neon' ? 'neon-enhanced' : 
+                            providerId
+
+        const connection = this.connections.get(connectionId)
+        if (!connection) {
+            return false
+        }
+
+        try {
+            // Simple health check query
+            await connection.execute('SELECT 1 as health_check')
+            return true
+        } catch (error) {
+            console.error(`Connection test failed for ${providerId}:`, error)
+            return false
+        }
+    }
+
     // Execute query on specific database provider
     async executeQuery(providerId: string, query: string, params?: unknown[]): Promise<unknown> {
         const connection = this.connections.get(providerId)

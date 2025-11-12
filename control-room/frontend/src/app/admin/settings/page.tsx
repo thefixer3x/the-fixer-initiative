@@ -5,6 +5,7 @@ import { Database, Server, Key, Bell, Shield, Save, RefreshCw, CheckCircle, Aler
 import { multiDB } from '@/lib/multi-database'
 import type { DatabaseMetrics } from '@/lib/types'
 import { ErrorDisplay } from '@/components/ErrorBoundary'
+import { DatabaseHealthMonitor, DataComparisonTool } from '@/components/DatabaseComparison'
 
 export default function SettingsPage() {
   const [dbMetrics, setDbMetrics] = useState<DatabaseMetrics[]>([])
@@ -269,6 +270,12 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Cross-Database Tools */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <DatabaseHealthMonitor />
+        <DataComparisonTool />
       </div>
 
       {/* System Information */}
