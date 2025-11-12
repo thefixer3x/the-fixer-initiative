@@ -1,15 +1,6 @@
 // Enhanced Neon Database Types
-
-// Control Room App Management
-export interface ControlRoomApp {
-  id: string
-  name: string
-  description?: string
-  owner_id: string
-  status: 'active' | 'inactive' | 'maintenance'
-  created_at: string
-  updated_at: string
-}
+// Re-export from consolidated types for consistency
+export type { ControlRoomApp } from './types-consolidated'
 
 // Client Services Organization (Enhanced)
 export interface ClientOrganization {

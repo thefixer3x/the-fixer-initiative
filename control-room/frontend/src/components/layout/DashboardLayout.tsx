@@ -31,8 +31,7 @@ import {
   Menu,
   X,
   Shield,
-  Activity,
-  Settings
+  Activity
 } from 'lucide-react'
 
 const navigation = [
