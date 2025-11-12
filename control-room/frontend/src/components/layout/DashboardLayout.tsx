@@ -42,7 +42,7 @@ const navigation = [
   { name: 'Analytics', href: '/usage', icon: BarChart3 },
   { name: 'API Docs', href: '/docs', icon: FileText },
   { name: 'Services', href: '/services', icon: Activity },
-  { name: 'Admin', href: '/admin/dashboard', icon: Settings },
+  { name: 'Databases', href: '/databases', icon: Shield },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

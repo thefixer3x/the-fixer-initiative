@@ -91,7 +91,7 @@ export default function AdminLayout({
                             <Link href="/" className="text-gray-500 hover:text-gray-700">
                                 <DashboardIcon className="w-4 h-4" />
                             </Link>
-                            {breadcrumbs.map((crumb, index) => (
+                            {breadcrumbs.map((crumb) => (
                                 <React.Fragment key={crumb.href}>
                                     <ChevronRightIcon className="w-4 h-4 text-gray-400" />
                                     {crumb.isLast ? (
