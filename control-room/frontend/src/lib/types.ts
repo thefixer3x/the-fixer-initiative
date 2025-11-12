@@ -149,3 +149,38 @@ export interface TransactionStats {
   pending: number
   revenue: number
 }
+
+// ============================================================================
+// CONSOLIDATED TYPES - Gradually migrating to single source of truth
+// ============================================================================
+// Import additional types from consolidated file
+export type {
+  Project,
+  Client,
+  Vendor,
+  BillingRecord,
+  DatabaseProvider,
+  DatabaseMetrics,
+  VendorAPIKey,
+  VendorUsageLog,
+  VendorBillingRecord,
+  EcosystemApp,
+  RealtimeSubscription,
+  RealtimePayload,
+  ApiResponse,
+  PaginatedResponse,
+  EcosystemProject,
+  AggregatedMetrics,
+  AuthUser,
+  Permission,
+  Session,
+  ProjectFormData,
+  ClientFormData,
+  VendorFormData,
+  BillingFormData,
+  FilterOptions,
+  SearchParams,
+  AsyncData,
+  TableAction,
+  TableColumn,
+} from './types-consolidated'
