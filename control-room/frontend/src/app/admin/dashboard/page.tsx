@@ -1,13 +1,24 @@
-'use client';
+'use client'
 
-import React from 'react';
+import React, { useMemo } from 'react'
+import { useData } from '@/app/hooks/useData'
+import { 
+  Users, 
+  DollarSign, 
+  Activity, 
+  TrendingUp,
+  TrendingDown,
+  Building2,
+  FileText,
+  AlertCircle
+} from 'lucide-react'
 import {
-    CardStackIcon,
-    PersonIcon,
-    ReaderIcon,
-    BarChartIcon,
-    DotsHorizontalIcon
-} from '@radix-ui/react-icons';
+  RevenueTrendChart,
+  SystemPerformanceChart,
+  ProjectDistributionChart,
+  UserGrowthChart,
+  TransactionStatsChart,
+} from '@/components/charts/DashboardCharts'
 import { useProjects, useClients, useVendors, useBillingRecords } from '../../hooks/useData';
 import { formatCurrency } from '../../lib/utils/format';
 
