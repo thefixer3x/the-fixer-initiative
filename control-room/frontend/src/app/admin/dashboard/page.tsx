@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useMemo } from 'react'
-import { useData } from '@/app/hooks/useData'
+import React from 'react'
 import { 
   Users, 
   DollarSign, 
@@ -10,7 +9,12 @@ import {
   TrendingDown,
   Building2,
   FileText,
-  AlertCircle
+  AlertCircle,
+  CreditCard,
+  User,
+  BookOpen,
+  BarChart3,
+  MoreHorizontal
 } from 'lucide-react'
 import {
   RevenueTrendChart,
@@ -37,10 +41,10 @@ export default function AdminDashboard() {
     const activeProjects = projects.filter(project => project.status === 'active').length;
 
     const stats = [
-        { name: 'Total Revenue', value: formatCurrency(totalRevenue), change: '+12.5%', icon: CardStackIcon },
-        { name: 'Active Clients', value: activeClients.toString(), change: '+8.2%', icon: PersonIcon },
-        { name: 'Active Projects', value: activeProjects.toString(), change: '+3.1%', icon: ReaderIcon },
-        { name: 'Connected Vendors', value: vendors.length.toString(), change: '+2.4%', icon: BarChartIcon },
+        { name: 'Total Revenue', value: formatCurrency(totalRevenue), change: '+12.5%', icon: CreditCard },
+        { name: 'Active Clients', value: activeClients.toString(), change: '+8.2%', icon: User },
+        { name: 'Active Projects', value: activeProjects.toString(), change: '+3.1%', icon: BookOpen },
+        { name: 'Connected Vendors', value: vendors.length.toString(), change: '+2.4%', icon: BarChart3 },
     ];
 
     // Recent activity (mock data for now)
@@ -102,7 +106,7 @@ export default function AdminDashboard() {
                                         <div className="flex items-center">
                                             <div className="flex-shrink-0">
                                                 <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                                                    <PersonIcon className="h-4 w-4 text-blue-600" />
+                                                    <User className="h-4 w-4 text-blue-600" />
                                                 </div>
                                             </div>
                                             <div className="ml-4">
@@ -125,7 +129,7 @@ export default function AdminDashboard() {
                             <div className="flex items-center justify-between">
                                 <h3 className="text-lg leading-6 font-medium text-gray-900">Top Projects</h3>
                                 <button className="text-gray-400 hover:text-gray-500">
-                                    <DotsHorizontalIcon className="h-5 w-5" />
+                                    <MoreHorizontal className="h-5 w-5" />
                                 </button>
                             </div>
                         </div>
@@ -162,7 +166,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="h-80 flex items-center justify-center">
                         <div className="text-center">
-                            <BarChartIcon className="mx-auto h-12 w-12 text-gray-400" />
+                            <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
                             <h3 className="mt-2 text-sm font-medium text-gray-900">Revenue Chart</h3>
                             <p className="mt-1 text-sm text-gray-500">Visual representation of revenue data</p>
                         </div>
@@ -176,7 +180,7 @@ export default function AdminDashboard() {
                     </div>
                     <div className="h-80 flex items-center justify-center">
                         <div className="text-center">
-                            <BarChartIcon className="mx-auto h-12 w-12 text-gray-400" />
+                            <BarChart3 className="mx-auto h-12 w-12 text-gray-400" />
                             <h3 className="mt-2 text-sm font-medium text-gray-900">Performance Metrics</h3>
                             <p className="mt-1 text-sm text-gray-500">System performance indicators</p>
                         </div>

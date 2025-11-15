@@ -19,6 +19,16 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    // Check if we should use mock auth (development or production without real auth setup)
+    const useMockAuth = process.env.NODE_ENV === 'development' ||
+      process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true'
+
+    if (useMockAuth) {
+      // For mock auth, we don't need to check sessions
+      setLoading(false)
+      return
+    }
+
     // Check active sessions and sets the user
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
@@ -37,10 +47,56 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
   }, [])
 
   const signIn = async (email: string, password: string) => {
+    // Check if we should use mock auth
+    const useMockAuth = process.env.NODE_ENV === 'development' ||
+      process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true'
+
+    console.log('[Auth] SignIn attempt:', {
+      email,
+      useMockAuth,
+      NODE_ENV: process.env.NODE_ENV,
+      USE_MOCK_AUTH: process.env.NEXT_PUBLIC_USE_MOCK_AUTH
+    })
+
+    if (useMockAuth) {
+      // Simple admin login for demo purposes
+      if (email === 'admin@fixer-initiative.com' && password === 'admin123') {
+        // Create a mock user for demo
+        const mockUser = {
+          id: 'admin-user-123',
+          email: 'admin@fixer-initiative.com',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          aud: 'authenticated',
+          role: 'authenticated',
+          email_confirmed_at: new Date().toISOString(),
+          last_sign_in_at: new Date().toISOString(),
+          app_metadata: {},
+          user_metadata: {},
+          identities: [],
+          factors: []
+        } as User
+
+        console.log('[Auth] Mock login successful, setting user:', mockUser)
+        setUser(mockUser)
+        return { error: null }
+      } else {
+        console.log('[Auth] Mock login failed: invalid credentials')
+        return { error: { message: 'Invalid credentials. Use admin@fixer-initiative.com / admin123' } }
+      }
+    }
+
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
+
+    if (!error) {
+      // User will be set via onAuthStateChange listener
+      const { data: { session } } = await supabase.auth.getSession()
+      setUser(session?.user ?? null)
+    }
+
     return { error }
   }
 
@@ -53,7 +109,16 @@ export function SimpleAuthProvider({ children }: { children: React.ReactNode }) 
   }
 
   const signOut = async () => {
+    const useMockAuth = process.env.NODE_ENV === 'development' ||
+      process.env.NEXT_PUBLIC_USE_MOCK_AUTH === 'true'
+
+    if (useMockAuth) {
+      setUser(null)
+      return
+    }
+
     await supabase.auth.signOut()
+    setUser(null)
   }
 
   return (

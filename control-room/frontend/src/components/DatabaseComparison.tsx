@@ -212,7 +212,7 @@ export function DataComparisonTool() {
                   Differences Detected
                 </p>
                 <ul className="text-xs text-yellow-700 space-y-1">
-                  {result.differences.map((diff, i) => (
+                  {result.differences.map((diff: string, i: number) => (
                     <li key={i}>• {diff}</li>
                   ))}
                 </ul>

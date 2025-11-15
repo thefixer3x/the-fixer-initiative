@@ -3,10 +3,11 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 /**
- * Authentication Middleware
+ * Authentication Proxy
  * Protects /admin routes from unauthorized access
+ * Migrated from middleware.ts per Next.js 16 convention
  */
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   let res = NextResponse.next({
     request: {
       headers: req.headers,
@@ -77,7 +78,7 @@ export async function middleware(req: NextRequest) {
   return res
 }
 
-// Configure which routes to run middleware on
+// Configure which routes to run proxy on
 export const config = {
   matcher: [
     /*
@@ -90,3 +91,4 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
+

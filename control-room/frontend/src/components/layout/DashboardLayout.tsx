@@ -37,6 +37,7 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
   { name: 'Clients', href: '/client', icon: Users },
+  { name: 'Projects', href: '/projects/issues', icon: FileText },
   { name: 'Transactions', href: '/transactions', icon: CreditCard },
   { name: 'Analytics', href: '/usage', icon: BarChart3 },
   { name: 'API Docs', href: '/docs', icon: FileText },

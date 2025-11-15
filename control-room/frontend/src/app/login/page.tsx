@@ -24,12 +24,19 @@ export default function LoginPage() {
         const errorMessage = error && typeof error === 'object' && 'message' in error 
           ? (error as { message: string }).message 
           : 'Authentication failed'
+        console.error('Login error:', error)
         toast.error(errorMessage)
       } else {
+        console.log('Login successful, redirecting...')
         toast.success('Successfully signed in!')
-        router.push('/')
+        // Small delay to ensure state is updated
+        setTimeout(() => {
+          router.push('/')
+          router.refresh()
+        }, 100)
       }
-    } catch {
+    } catch (err) {
+      console.error('Unexpected login error:', err)
       toast.error('An unexpected error occurred')
     } finally {
       setLoading(false)
@@ -49,6 +56,13 @@ export default function LoginPage() {
           <p className="mt-2 text-center text-sm text-gray-600">
             Sign in to access the control dashboard
           </p>
+          <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md">
+            <p className="text-sm text-blue-800">
+              <strong>Demo Credentials:</strong><br />
+              Email: admin@fixer-initiative.com<br />
+              Password: admin123
+            </p>
+          </div>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
