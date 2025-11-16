@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react'
 import { Plus, Search, Edit, Trash2, Eye, RefreshCw } from 'lucide-react'
-import MultiDatabaseAPI from '@/lib/neon-api'
 import type { ControlRoomApp } from '@/lib/types'
 import { ErrorDisplay } from '@/components/ErrorBoundary'
 import { useRealtime } from '@/hooks/useRealtime'
@@ -20,8 +19,13 @@ export default function ProjectsPage() {
     try {
       setLoading(true)
       setError(null)
-      const data = await MultiDatabaseAPI.getControlRoomApps()
-      setProjects(data)
+      const response = await fetch('/api/admin/projects')
+      const data = await response.json()
+      if (data.success) {
+        setProjects(data.projects)
+      } else {
+        throw new Error(data.error || 'Failed to fetch projects')
+      }
     } catch (err) {
       setError(err as Error)
       console.error('Failed to fetch projects:', err)

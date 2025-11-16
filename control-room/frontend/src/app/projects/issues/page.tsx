@@ -64,7 +64,7 @@ export default function GitHubIssuesPage() {
       return (
         issue.title.toLowerCase().includes(query) ||
         issue.body?.toLowerCase().includes(query) ||
-        issue.labels.some(label => 
+        issue.labels.some((label: any) =>
           (typeof label === 'string' ? label : label.name).toLowerCase().includes(query)
         )
       )
@@ -195,7 +195,7 @@ export default function GitHubIssuesPage() {
 
                         {issue.labels && issue.labels.length > 0 && (
                           <div className="flex flex-wrap gap-2 mb-2">
-                            {issue.labels.map((label, idx) => {
+                            {issue.labels.map((label: any, idx) => {
                               const labelName = typeof label === 'string' ? label : label.name
                               const isBilling = labelName.includes('billing')
                               return (

@@ -3,8 +3,8 @@ import { MultiDatabaseAPI } from '@/lib/neon-api';
 
 export async function GET(request: NextRequest) {
   try {
-    const clients = await MultiDatabaseAPI.getClientOrganizations();
-    return NextResponse.json({ success: true, clients });
+    const projects = await MultiDatabaseAPI.getControlRoomApps();
+    return NextResponse.json({ success: true, projects });
   } catch (error: any) {
     return NextResponse.json(
       { success: false, error: error.message },

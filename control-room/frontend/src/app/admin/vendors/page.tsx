@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { Plus, Search, Key, RefreshCw, Activity, TrendingUp, DollarSign } from 'lucide-react'
-import MultiDatabaseAPI from '@/lib/neon-api'
 import type { VendorAPIKey, VendorUsageLog } from '@/lib/types'
 import { ErrorDisplay } from '@/components/ErrorBoundary'
 
@@ -18,12 +17,14 @@ export default function VendorsPage() {
     try {
       setLoading(true)
       setError(null)
-      const [vendorData, usageData] = await Promise.all([
-        MultiDatabaseAPI.getVendorAPIKeys(),
-        MultiDatabaseAPI.getUsageLogs(50)
-      ])
-      setVendors(vendorData)
-      setUsageLogs(usageData)
+      const response = await fetch('/api/admin/vendors')
+      const data = await response.json()
+      if (data.success) {
+        setVendors(data.vendors || [])
+        setUsageLogs([])
+      } else {
+        throw new Error(data.error || 'Failed to fetch vendors')
+      }
     } catch (err) {
       setError(err as Error)
       console.error('Failed to fetch vendors:', err)

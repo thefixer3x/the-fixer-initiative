@@ -1,7 +1,7 @@
 // Real Data Service - Fetches live data from ecosystem APIs and databases
 import { supabase } from './supabase'
 import { ecosystemAPI } from './ecosystem-api'
-import { MultiDatabaseAPI } from './neon-api'
+// Note: Database operations moved to API routes to avoid bundling server-only code
 
 export interface RealTimeMetrics {
   totalUsers: number
@@ -161,14 +161,27 @@ class RealDataService {
   // Get database metrics from Supabase
   private async getDatabaseMetrics() {
     try {
-      const metrics = await MultiDatabaseAPI.getDashboardMetrics()
+      // Fetch from Supabase directly (client-side safe)
+      const { count: totalApps } = await supabase
+        .from('apps')
+        .select('*', { count: 'exact', head: true })
+
+      const { count: activeApps } = await supabase
+        .from('apps')
+        .select('*', { count: 'exact', head: true })
+        .eq('is_active', true)
+
+      const { count: totalOrganizations } = await supabase
+        .from('client_organizations')
+        .select('*', { count: 'exact', head: true })
+
       return {
-        totalApps: metrics.totalApps || 0,
-        activeApps: metrics.activeApps || 0,
-        totalOrganizations: metrics.totalOrganizations || 0,
-        activeOrganizations: metrics.activeOrganizations || 0,
-        totalProfiles: metrics.totalProfiles || 0,
-        totalAuthUsers: metrics.totalAuthUsers || 0,
+        totalApps: totalApps || 0,
+        activeApps: activeApps || 0,
+        totalOrganizations: totalOrganizations || 0,
+        activeOrganizations: 0,
+        totalProfiles: 0,
+        totalAuthUsers: 0,
       }
     } catch (error) {
       console.error('Error fetching database metrics:', error)

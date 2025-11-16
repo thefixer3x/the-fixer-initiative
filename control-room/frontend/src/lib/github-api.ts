@@ -63,9 +63,9 @@ class GitHubAPIService {
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseURL}${endpoint}`
-    const headers: HeadersInit = {
+    const headers: Record<string, string> = {
       'Accept': 'application/vnd.github.v3+json',
-      ...options.headers,
+      ...(options.headers as Record<string, string>),
     }
 
     if (this.token) {
@@ -174,11 +174,11 @@ class GitHubAPIService {
 
     // Update issue labels
     const labels = [...(issue.labels || []), 'billing', `tier-${billingLink.billingCycle}`]
-    
+
     return this.request<GitHubIssue>(`/repos/${this.owner}/${repo}/issues/${issueNumber}`, {
       method: 'PATCH',
       body: JSON.stringify({
-        labels: labels.map(l => typeof l === 'string' ? l : l.name),
+        labels: labels.map((l: any) => typeof l === 'string' ? l : l.name),
       }),
     })
   }
