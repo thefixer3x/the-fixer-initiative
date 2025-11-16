@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { PlayIcon, StopIcon, RefreshCwIcon, TrashIcon, AlertCircleIcon, CheckCircleIcon } from 'lucide-react';
+import { PlayIcon, Square, RefreshCwIcon, TrashIcon, AlertCircleIcon, CheckCircleIcon } from 'lucide-react';
 
 interface Service {
   name: string;
@@ -191,7 +191,7 @@ export default function ServiceControlPanel() {
                     className="p-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Stop service"
                   >
-                    <StopIcon size={16} />
+                    <Square size={16} />
                   </button>
                 ) : (
                   <button
