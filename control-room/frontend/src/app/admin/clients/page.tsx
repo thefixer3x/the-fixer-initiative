@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { Plus, Search, Edit, Trash2, Eye, RefreshCw, Users, CheckCircle, XCircle } from 'lucide-react'
-import MultiDatabaseAPI from '@/lib/neon-api'
 import type { ClientOrganization } from '@/lib/types'
 import { ErrorDisplay } from '@/components/ErrorBoundary'
 
@@ -18,8 +17,13 @@ export default function ClientsPage() {
     try {
       setLoading(true)
       setError(null)
-      const data = await MultiDatabaseAPI.getClientOrganizations()
-      setClients(data)
+      const response = await fetch('/api/admin/clients')
+      const data = await response.json()
+      if (data.success) {
+        setClients(data.clients)
+      } else {
+        throw new Error(data.error || 'Failed to fetch clients')
+      }
     } catch (err) {
       setError(err as Error)
       console.error('Failed to fetch clients:', err)

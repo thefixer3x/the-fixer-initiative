@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react'
 import { DollarSign, TrendingUp, FileText, Download, RefreshCw, Calendar } from 'lucide-react'
-import MultiDatabaseAPI from '@/lib/neon-api'
 import type { VendorBillingRecord } from '@/lib/types'
 import { ErrorDisplay } from '@/components/ErrorBoundary'
 
@@ -17,8 +16,13 @@ export default function BillingPage() {
     try {
       setLoading(true)
       setError(null)
-      const data = await MultiDatabaseAPI.getBillingRecords()
-      setBillingRecords(data)
+      const response = await fetch('/api/admin/billing')
+      const data = await response.json()
+      if (data.success) {
+        setBillingRecords([])
+      } else {
+        throw new Error(data.error || 'Failed to fetch billing records')
+      }
     } catch (err) {
       setError(err as Error)
       console.error('Failed to fetch billing records:', err)
