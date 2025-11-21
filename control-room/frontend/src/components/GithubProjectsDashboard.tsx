@@ -9,7 +9,7 @@ import { Label } from '@/components/ui/label';
 import { 
   GitBranch,
   Star,
-  Fork,
+  GitFork,
   ExternalLink,
   Plus,
   Search,
@@ -250,7 +250,7 @@ export default function GitHubProjectsDashboard() {
                       <span>{project.github_stats.stars}</span>
                     </div>
                     <div className="flex items-center">
-                      <Fork className="h-4 w-4 text-gray-500 mr-1" />
+                      <GitFork className="h-4 w-4 text-gray-500 mr-1" />
                       <span>{project.github_stats.forks}</span>
                     </div>
                     <div className="flex items-center">

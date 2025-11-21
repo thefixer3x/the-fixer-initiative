@@ -359,7 +359,7 @@ export default function SupabaseManagementDashboard() {
                       }`}>
                         <div className="flex items-center">
                           {troubleshootResult.status === 'healthy' && <CheckCircle className="h-5 w-5 text-green-500 mr-2" />}
-                          {(troubleshootResult.status === 'degraded' || troubleshootResult.status === 'warning') && <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />}
+                          {troubleshootResult.status === 'degraded' && <AlertTriangle className="h-5 w-5 text-yellow-500 mr-2" />}
                           {(troubleshootResult.status === 'unhealthy' || troubleshootResult.status === 'error') && <AlertTriangle className="h-5 w-5 text-red-500 mr-2" />}
                           <span className="font-medium capitalize">{troubleshootResult.status}</span>
                         </div>
