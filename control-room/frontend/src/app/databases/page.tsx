@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/SimpleAuthContext'
+import { useAuth } from '@/lib/auth'
 import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Database, Server, ArrowRight, CheckCircle, Activity } from 'lucide-react'

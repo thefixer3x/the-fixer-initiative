@@ -10,7 +10,7 @@ import {
     DashboardIcon
 } from '@radix-ui/react-icons';
 import { AdminNavigation } from './AdminNavigation';
-import { useAuth } from '@/contexts/SimpleAuthContext';
+import { useAuth } from '@/lib/auth';
 import { DatabaseSwitcher } from '@/components/DatabaseSwitcher';
 import { DatabaseProvider } from '@/contexts/DatabaseContext';
 

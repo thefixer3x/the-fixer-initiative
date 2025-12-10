@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useAuth } from '@/contexts/SimpleAuthContext'
+import { useAuth } from '@/lib/auth'
 
 // Client-side date component to avoid hydration mismatch
 function ClientDate() {
@@ -31,11 +31,13 @@ import {
   Menu,
   X,
   Shield,
-  Activity
+  Activity,
+  MessageSquare
 } from 'lucide-react'
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
+  { name: 'Assistant', href: '/assistant', icon: MessageSquare },
   { name: 'Clients', href: '/client', icon: Users },
   { name: 'Projects', href: '/projects/issues', icon: FileText },
   { name: 'Transactions', href: '/transactions', icon: CreditCard },
@@ -43,6 +45,8 @@ const navigation = [
   { name: 'API Docs', href: '/docs', icon: FileText },
   { name: 'Services', href: '/services', icon: Activity },
   { name: 'Databases', href: '/databases', icon: Shield },
+  // Cross-navigation to Admin Control Room
+  { name: 'Control Room', href: '/admin', icon: Shield, divider: true },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

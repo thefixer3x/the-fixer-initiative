@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import "./globals.css";
-import { SimpleAuthProvider } from "@/contexts/SimpleAuthContext";
+import { AuthProvider } from "@/lib/auth";
 import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
@@ -18,10 +18,10 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <Suspense fallback={<div>Loading...</div>}>
-          <SimpleAuthProvider>
+          <AuthProvider>
             {children}
             <Toaster position="top-right" />
-          </SimpleAuthProvider>
+          </AuthProvider>
         </Suspense>
       </body>
     </html>

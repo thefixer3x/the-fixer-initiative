@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/SimpleAuthContext'
+import { useAuth } from '@/lib/auth'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Settings, CheckCircle, AlertCircle, Key } from 'lucide-react'
 import { githubAPI } from '@/lib/github-api'

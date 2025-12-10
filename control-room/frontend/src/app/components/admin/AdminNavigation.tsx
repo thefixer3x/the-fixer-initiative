@@ -10,17 +10,22 @@ import {
     ReaderIcon,
     CardStackIcon,
     BarChartIcon,
-    GearIcon
+    GearIcon,
+    ChatBubbleIcon,
+    HomeIcon
 } from '@radix-ui/react-icons';
 
 const navigationItems = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: DashboardIcon },
+    { name: 'Assistant', href: '/admin/assistant', icon: ChatBubbleIcon },
     { name: 'Projects', href: '/admin/projects', icon: CubeIcon },
     { name: 'Clients', href: '/admin/clients', icon: PersonIcon },
     { name: 'Vendors', href: '/admin/vendors', icon: ReaderIcon },
     { name: 'Billing', href: '/admin/billing', icon: CardStackIcon },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChartIcon },
     { name: 'Settings', href: '/admin/settings', icon: GearIcon },
+    // Cross-navigation back to main dashboard
+    { name: 'Main Dashboard', href: '/', icon: HomeIcon },
 ];
 
 export function AdminNavigation() {

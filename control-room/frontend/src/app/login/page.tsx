@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { useAuth } from '@/contexts/SimpleAuthContext'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { authClient } from '@/lib/auth'
 import { Shield, Eye, EyeOff } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -11,34 +11,35 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
-  const { signIn } = useAuth()
   const router = useRouter()
+  const searchParams = useSearchParams()
+  
+  // Get redirect destination from URL params
+  const redirectTo = searchParams.get('redirectTo') || '/'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
 
     try {
-      const { error } = await signIn(email, password)
+      const { session, error } = await authClient.signIn(email, password)
+      
+      console.log('[Login] Result:', { session: !!session, error: error?.message })
+      
       if (error) {
-        const errorMessage = error && typeof error === 'object' && 'message' in error 
-          ? (error as { message: string }).message 
-          : 'Authentication failed'
-        console.error('Login error:', error)
-        toast.error(errorMessage)
-      } else {
-        console.log('Login successful, redirecting...')
+        toast.error(error.message || 'Authentication failed')
+        setLoading(false)
+        return
+      }
+      
+      if (session) {
         toast.success('Successfully signed in!')
-        // Small delay to ensure state is updated
-        setTimeout(() => {
-          router.push('/')
-          router.refresh()
-        }, 100)
+        // Use window.location for a hard redirect to ensure state is fresh
+        window.location.href = redirectTo
       }
     } catch (err) {
       console.error('Unexpected login error:', err)
       toast.error('An unexpected error occurred')
-    } finally {
       setLoading(false)
     }
   }
