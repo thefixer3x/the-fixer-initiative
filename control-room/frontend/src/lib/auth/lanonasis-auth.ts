@@ -1,5 +1,6 @@
 'use client';
 
+import { supabase } from '@/lib/supabase';
 import {
   MCPClient,
   TokenStorageWeb,
@@ -52,21 +53,39 @@ export class LanonasisAuthClient {
   }
 
   /**
-   * Sign in with email and password (OAuth flow)
+   * Sign in with email and password (Supabase Auth)
    */
   async signIn(email: string, password: string): Promise<{ session: AuthSession | null; error: Error | null }> {
     try {
-      // For OAuth flow, connect to MCP client which triggers authentication
-      await this.mcpClient.connect();
+      // Use Supabase authentication
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      // Get tokens from storage
-      const tokens = await this.tokenStorage.retrieve();
-      if (!tokens) {
-        throw new Error('Authentication failed - no tokens received');
+      if (error) {
+        throw error;
       }
 
-      // Create session from tokens
-      const session = await this.createSessionFromTokens(tokens);
+      if (!data.session || !data.user) {
+        throw new Error('Authentication failed - no session received');
+      }
+
+      // Create our session format from Supabase session
+      const session: AuthSession = {
+        user: {
+          id: data.user.id,
+          email: data.user.email || email,
+          name: data.user.user_metadata?.name,
+          role: (data.user.user_metadata?.role as 'user' | 'admin') || 'user',
+          permissions: data.user.user_metadata?.permissions,
+          metadata: data.user.user_metadata,
+        },
+        accessToken: data.session.access_token,
+        refreshToken: data.session.refresh_token,
+        expiresAt: new Date(data.session.expires_at!).getTime(),
+        tokenType: data.session.token_type || 'bearer',
+      };
 
       // Notify listeners
       this.notifySessionChange(session);
@@ -115,7 +134,7 @@ export class LanonasisAuthClient {
    */
   async signOut(): Promise<void> {
     try {
-      await this.mcpClient.logout();
+      await supabase.auth.signOut();
       await this.tokenStorage.clear();
       this.notifySessionChange(null);
     } catch (error) {
@@ -128,17 +147,28 @@ export class LanonasisAuthClient {
    */
   async getSession(): Promise<AuthSession | null> {
     try {
-      const tokens = await this.tokenStorage.retrieve();
-      if (!tokens) {
+      const { data: { session: supabaseSession } } = await supabase.auth.getSession();
+
+      if (!supabaseSession || !supabaseSession.user) {
         return null;
       }
 
-      // Check if token is expired
-      if (this.tokenStorage.isTokenExpired(tokens)) {
-        return null;
-      }
+      const session: AuthSession = {
+        user: {
+          id: supabaseSession.user.id,
+          email: supabaseSession.user.email || '',
+          name: supabaseSession.user.user_metadata?.name,
+          role: (supabaseSession.user.user_metadata?.role as 'user' | 'admin') || 'user',
+          permissions: supabaseSession.user.user_metadata?.permissions,
+          metadata: supabaseSession.user.user_metadata,
+        },
+        accessToken: supabaseSession.access_token,
+        refreshToken: supabaseSession.refresh_token,
+        expiresAt: new Date(supabaseSession.expires_at!).getTime(),
+        tokenType: supabaseSession.token_type || 'bearer',
+      };
 
-      return await this.createSessionFromTokens(tokens);
+      return session;
     } catch (error) {
       console.error('Get session error:', error);
       return null;
@@ -175,7 +205,7 @@ export class LanonasisAuthClient {
   /**
    * Check if user has a specific permission
    */
-  hasPermission(permission: string): boolean {
+  hasPermission(_permission: string): boolean {
     // TODO: Implement permission checking based on session
     return false;
   }

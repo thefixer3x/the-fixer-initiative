@@ -13,6 +13,11 @@ module.exports = {
       env: {
         NODE_ENV: 'production',
         PORT: '7779',
+        NEXT_PUBLIC_SUPABASE_URL: 'https://mxtsdgkwzjzlttpotole.supabase.co',
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14dHNkZ2t3emp6bHR0cG90b2xlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcxMDUyNTksImV4cCI6MjA2MjY4MTI1OX0.2KM8JxBEsqQidSvjhuLs8HCX-7g-q6YNswedQ5ZYq3g',
+        NEXT_PUBLIC_SUPABASE_SERVICE_KEY: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im14dHNkZ2t3emp6bHR0cG90b2xlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0NzEwNTI1OSwiZXhwIjoyMDYyNjgxMjU5fQ.Aoob84MEgNV-viFugZHWKodJUjn4JOQNzcSQ57stJFU',
+        NEXT_PUBLIC_BASE_URL: 'https://control-room.connectionpoint.tech',
+        NEXT_PUBLIC_USE_MOCK_AUTH: 'false',
       },
       env_file: '.env.production',
       error_file: '/var/log/pm2/control-room-frontend-error.log',
