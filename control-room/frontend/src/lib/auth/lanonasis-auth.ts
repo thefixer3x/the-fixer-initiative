@@ -18,9 +18,7 @@ export interface LanonasisUser {
 }
 
 export interface AuthSession {
-  user: Lanon
-
-asisUser;
+  user: LanonasisUser;
   accessToken: string;
   refreshToken?: string;
   expiresAt: number;
