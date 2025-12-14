@@ -47,25 +47,38 @@ export function AuthProvider({
 
   // Initialize auth state - must run on client side
   useEffect(() => {
-    // Force reload session from localStorage on client
-    const storedSession = typeof window !== 'undefined' 
-      ? localStorage.getItem('lanonasis_auth_session')
-      : null;
-    
-    if (storedSession) {
-      try {
-        const parsed = JSON.parse(storedSession) as AuthSession;
-        if (parsed.expiresAt > Date.now()) {
-          setSession(parsed);
-          setUser(parsed.user);
-        } else {
+    const initializeAuth = async () => {
+      // First, check for stored session in localStorage
+      const storedSession = typeof window !== 'undefined' 
+        ? localStorage.getItem('lanonasis_auth_session')
+        : null;
+      
+      if (storedSession) {
+        try {
+          const parsed = JSON.parse(storedSession) as AuthSession;
+          if (parsed.expiresAt > Date.now()) {
+            setSession(parsed);
+            setUser(parsed.user);
+          } else {
+            localStorage.removeItem('lanonasis_auth_session');
+          }
+        } catch {
           localStorage.removeItem('lanonasis_auth_session');
         }
-      } catch {
-        localStorage.removeItem('lanonasis_auth_session');
       }
-    }
-    setLoading(false);
+
+      // Also check Supabase session directly
+      const currentSession = await authClient.getSession();
+      if (currentSession) {
+        setSession(currentSession);
+        setUser(currentSession.user);
+      }
+
+      // Only set loading to false after we've checked both sources
+      setLoading(false);
+    };
+
+    initializeAuth();
 
     // Subscribe to session changes
     const unsubscribe = authClient.onSessionChange((newSession) => {
