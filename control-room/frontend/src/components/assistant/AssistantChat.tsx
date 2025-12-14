@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useChat } from '@ai-sdk/react';
+import { DefaultChatTransport } from 'ai';
 import type { UIMessage } from 'ai';
 import {
   Send,
@@ -18,6 +19,15 @@ function isToolPart(part: any): part is { type: string; toolCallId: string; stat
 }
 
 export function AssistantChat() {
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport({
+        // Route that actually exists in this app
+        api: '/api/assistant',
+      }),
+    []
+  );
+
   const {
     messages,
     status,
@@ -27,8 +37,7 @@ export function AssistantChat() {
     clearError,
     setMessages,
   } = useChat({
-    // Custom API endpoint for assistant
-    api: '/api/assistant',
+    transport,
   } as any); // Type assertion for AI SDK v5 compatibility
 
   const isLoading = status === 'submitted' || status === 'streaming';

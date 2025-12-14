@@ -1,19 +1,32 @@
-import { streamText, tool } from 'ai';
+import { convertToCoreMessages, streamText, tool } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { z } from 'zod';
 
-// Create OpenAI provider with Vercel AI Gateway
 // Vercel AI Gateway URL format: https://gateway.ai.vercel.com/v1/{team}/{project}
-const openai = createOpenAI({
-  apiKey: process.env.AI_GATEWAY_API_KEY || process.env.OPENAI_API_KEY || '',
-  baseURL: process.env.AI_GATEWAY_URL || 'https://gateway.ai.vercel.com/v1/onasis-team/db-recovery-tfi-v0',
-});
+const DEFAULT_GATEWAY_URL = 'https://gateway.ai.vercel.com/v1/onasis-team/db-recovery-tfi-v0';
 
 // Base URL for internal API calls
 const getBaseUrl = () => {
   if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL;
   return 'http://localhost:3000';
+};
+
+// Pick the right provider config based on available env vars
+const getOpenAI = () => {
+  const gatewayKey = process.env.AI_GATEWAY_API_KEY;
+  const gatewayUrl = process.env.AI_GATEWAY_URL || DEFAULT_GATEWAY_URL;
+  const openaiKey = process.env.OPENAI_API_KEY;
+
+  const apiKey = gatewayKey || openaiKey;
+  if (!apiKey) {
+    throw new Error('AI credentials missing. Set AI_GATEWAY_API_KEY (preferred) or OPENAI_API_KEY.');
+  }
+
+  // If we only have an OpenAI key, use the OpenAI API directly to avoid gateway TLS issues
+  const baseURL = gatewayKey ? gatewayUrl : 'https://api.openai.com/v1';
+
+  return createOpenAI({ apiKey, baseURL });
 };
 
 const SYSTEM_PROMPT = `You are the Control Room Assistant for The Fixer Initiative ecosystem.
@@ -38,11 +51,13 @@ export async function POST(req: Request) {
   try {
     const { messages } = await req.json();
     const baseUrl = getBaseUrl();
+    const openai = getOpenAI();
 
     const result = streamText({
       model: openai('gpt-4o-mini'),
       system: SYSTEM_PROMPT,
-      messages,
+      // AI SDK UI sends UIMessage[]; convert to model-friendly messages
+      messages: convertToCoreMessages(messages),
       tools: {
         // Ecosystem-wide health check
         getEcosystemStatus: tool({

@@ -25,8 +25,8 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // Routes that don't require authentication
 const PUBLIC_ROUTES = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
-// Routes that require admin role
-const ADMIN_ROUTES = ['/admin'];
+// Routes that require admin role (currently disabled - all authenticated users can access)
+// const ADMIN_ROUTES = ['/admin'];
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -48,33 +48,48 @@ export function AuthProvider({
   // Initialize auth state - must run on client side
   useEffect(() => {
     const initializeAuth = async () => {
-      // First, check for stored session in localStorage
+      console.log('[AuthContext] Initializing auth...');
+      
+      // First, check for stored session in localStorage (fast, synchronous)
       const storedSession = typeof window !== 'undefined' 
         ? localStorage.getItem('lanonasis_auth_session')
         : null;
       
+      console.log('[AuthContext] localStorage session:', storedSession ? 'found' : 'not found');
+      
       if (storedSession) {
         try {
           const parsed = JSON.parse(storedSession) as AuthSession;
+          console.log('[AuthContext] Parsed session, expires:', new Date(parsed.expiresAt), 'now:', new Date());
           if (parsed.expiresAt > Date.now()) {
+            console.log('[AuthContext] Session valid, setting user:', parsed.user.email);
             setSession(parsed);
             setUser(parsed.user);
+            setLoading(false);
+            return; // Early return - we have a valid session
           } else {
+            console.log('[AuthContext] Session expired, removing');
             localStorage.removeItem('lanonasis_auth_session');
           }
-        } catch {
+        } catch (e) {
+          console.error('[AuthContext] Failed to parse localStorage session:', e);
           localStorage.removeItem('lanonasis_auth_session');
         }
       }
 
-      // Also check Supabase session directly
-      const currentSession = await authClient.getSession();
-      if (currentSession) {
-        setSession(currentSession);
-        setUser(currentSession.user);
+      // Check Supabase session directly (async) - only if no localStorage session
+      try {
+        console.log('[AuthContext] Checking Supabase session...');
+        const currentSession = await authClient.getSession();
+        console.log('[AuthContext] Supabase session:', currentSession ? 'found' : 'not found');
+        if (currentSession) {
+          setSession(currentSession);
+          setUser(currentSession.user);
+        }
+      } catch (err) {
+        console.error('[AuthContext] Failed to get Supabase session:', err);
       }
 
-      // Only set loading to false after we've checked both sources
       setLoading(false);
     };
 
@@ -91,17 +106,21 @@ export function AuthProvider({
 
   // Handle route protection
   useEffect(() => {
-    if (loading) return;
+    console.log('[AuthContext] Route protection check:', { loading, user: user?.email, pathname });
+    if (loading) {
+      console.log('[AuthContext] Still loading, skipping route protection');
+      return;
+    }
 
     const isPublicRoute = PUBLIC_ROUTES.some(route => pathname?.startsWith(route));
-    const isAdminRoute = ADMIN_ROUTES.some(route => pathname?.startsWith(route));
 
     if (!user && !isPublicRoute) {
       // Not authenticated and trying to access protected route
-      router.push(loginPath);
-    } else if (user && isAdminRoute && user.role !== 'admin') {
-      // Trying to access admin route without admin role
-      router.push('/');
+      console.log('[AuthContext] No user and not public route, redirecting to login');
+      const redirectParam = pathname ? `?redirectTo=${encodeURIComponent(pathname)}` : '';
+      router.push(`${loginPath}${redirectParam}`);
+    } else {
+      console.log('[AuthContext] Route protection passed:', { isPublicRoute, hasUser: !!user });
     }
   }, [user, loading, pathname, router, loginPath]);
 

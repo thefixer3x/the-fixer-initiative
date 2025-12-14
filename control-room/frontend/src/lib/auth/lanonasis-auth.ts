@@ -5,7 +5,6 @@ import {
   MCPClient,
   TokenStorageWeb,
   type TokenResponse,
-  type MCPClientConfig,
 } from '@lanonasis/oauth-client/browser';
 
 // Type definitions for Lanonasis authentication
@@ -26,10 +25,11 @@ export interface AuthSession {
   tokenType: string;
 }
 
-export interface AuthConfig extends MCPClientConfig {
+export interface AuthConfig {
   clientId?: string;
   authBaseUrl?: string;
   apiKey?: string;
+  mcpEndpoint?: string;
 }
 
 /**
@@ -83,7 +83,8 @@ export class LanonasisAuthClient {
         },
         accessToken: data.session.access_token,
         refreshToken: data.session.refresh_token,
-        expiresAt: new Date(data.session.expires_at!).getTime(),
+        // Supabase expires_at is Unix timestamp in seconds, convert to milliseconds
+        expiresAt: data.session.expires_at! * 1000,
         tokenType: data.session.token_type || 'bearer',
       };
 
@@ -164,7 +165,8 @@ export class LanonasisAuthClient {
         },
         accessToken: supabaseSession.access_token,
         refreshToken: supabaseSession.refresh_token,
-        expiresAt: new Date(supabaseSession.expires_at!).getTime(),
+        // Supabase expires_at is Unix timestamp in seconds, convert to milliseconds
+        expiresAt: supabaseSession.expires_at! * 1000,
         tokenType: supabaseSession.token_type || 'bearer',
       };
 
@@ -205,9 +207,22 @@ export class LanonasisAuthClient {
   /**
    * Check if user has a specific permission
    */
-  hasPermission(_permission: string): boolean {
-    // TODO: Implement permission checking based on session
-    return false;
+  hasPermission(permission: string): boolean {
+    // Check permission against current session
+    const storedSession = typeof window !== 'undefined' 
+      ? localStorage.getItem('lanonasis_auth_session')
+      : null;
+    
+    if (!storedSession) return false;
+    
+    try {
+      const session = JSON.parse(storedSession) as AuthSession;
+      if (!session.user.permissions) return false;
+      if (session.user.permissions.includes('*')) return true;
+      return session.user.permissions.includes(permission);
+    } catch {
+      return false;
+    }
   }
 
   /**
