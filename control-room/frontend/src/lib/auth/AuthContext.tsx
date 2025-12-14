@@ -2,10 +2,10 @@
 
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { 
-  LanonasisUser, 
-  AuthSession,
-  authClient
+import {
+  type LanonasisUser,
+  type AuthSession,
+  authClient,
 } from './lanonasis-auth';
 
 interface AuthContextType {

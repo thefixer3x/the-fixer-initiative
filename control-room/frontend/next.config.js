@@ -4,6 +4,25 @@ const nextConfig = {
     experimental: {
         optimizePackageImports: ['lucide-react', 'recharts'],
     },
+
+    // Webpack configuration for Node.js polyfills
+    webpack: (config, { isServer }) => {
+        if (!isServer) {
+            // Don't attempt to bundle Node.js modules in browser
+            config.resolve.fallback = {
+                ...config.resolve.fallback,
+                fs: false,
+                path: false,
+                os: false,
+                crypto: false,
+                child_process: false,
+                net: false,
+                tls: false,
+                dns: false,
+            };
+        }
+        return config;
+    },
     
     // Updated images config for Next.js 16
     images: {
@@ -21,9 +40,12 @@ const nextConfig = {
     
     // Turbopack configuration (required for Next.js 16)
     turbopack: {
-        // Empty config to silence the warning
-        // Add custom Turbopack config here if needed
+        // Set the correct root directory to silence lockfile warnings
+        root: __dirname,
     },
+
+    // Server components configuration
+    serverExternalPackages: ['@lanonasis/oauth-client'],
     
     // Environment variables
     env: {

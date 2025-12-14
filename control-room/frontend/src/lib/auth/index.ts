@@ -1,6 +1,6 @@
 // @lanonasis/oauth-client - Main exports
-export { 
-  LanonasisAuthClient, 
+export {
+  LanonasisAuthClient,
   authClient,
   type LanonasisUser,
   type AuthSession,
