@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createBrowserClient } from '@supabase/ssr'
 
 // Multi-Database Configuration for Control Room
 // Supports both original Supabase and enhanced Neon architectures
@@ -12,7 +12,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Create ONE browser auth client only
-export const supabase = createClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder-key', {
+export const supabase = createBrowserClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder-key', {
+  cookieOptions: {
+    name: 'fixer-control-room-auth',
+  },
   auth: {
     // Optional: set a custom storage key to avoid collisions across apps on same domain
     storageKey: 'fixer-control-room-auth',
