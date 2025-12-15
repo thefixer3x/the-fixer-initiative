@@ -49,39 +49,12 @@ export function AuthProvider({
   useEffect(() => {
     const initializeAuth = async () => {
       console.log('[AuthContext] Initializing auth...');
-      
-      // First, check for stored session in localStorage (fast, synchronous)
-      const storedSession = typeof window !== 'undefined' 
-        ? localStorage.getItem('lanonasis_auth_session')
-        : null;
-      
-      console.log('[AuthContext] localStorage session:', storedSession ? 'found' : 'not found');
-      
-      if (storedSession) {
-        try {
-          const parsed = JSON.parse(storedSession) as AuthSession;
-          console.log('[AuthContext] Parsed session, expires:', new Date(parsed.expiresAt), 'now:', new Date());
-          if (parsed.expiresAt > Date.now()) {
-            console.log('[AuthContext] Session valid, setting user:', parsed.user.email);
-            setSession(parsed);
-            setUser(parsed.user);
-            setLoading(false);
-            return; // Early return - we have a valid session
-          } else {
-            console.log('[AuthContext] Session expired, removing');
-            localStorage.removeItem('lanonasis_auth_session');
-          }
-        } catch (e) {
-          console.error('[AuthContext] Failed to parse localStorage session:', e);
-          localStorage.removeItem('lanonasis_auth_session');
-        }
-      }
 
-      // Check Supabase session directly (async) - only if no localStorage session
+      // Check Supabase session directly (cookie-based via @supabase/ssr)
       try {
         console.log('[AuthContext] Checking Supabase session...');
         const currentSession = await authClient.getSession();
-        console.log('[AuthContext] Supabase session:', currentSession ? 'found' : 'not found');
+        console.log('[AuthContext] Supabase session:', currentSession ? `found (${currentSession.user.email})` : 'not found');
         if (currentSession) {
           setSession(currentSession);
           setUser(currentSession.user);
@@ -97,6 +70,7 @@ export function AuthProvider({
 
     // Subscribe to session changes
     const unsubscribe = authClient.onSessionChange((newSession) => {
+      console.log('[AuthContext] Session changed:', newSession ? newSession.user.email : 'null');
       setSession(newSession);
       setUser(newSession?.user ?? null);
     });
@@ -104,23 +78,21 @@ export function AuthProvider({
     return unsubscribe;
   }, []);
 
-  // Handle route protection
+  // Handle route protection (client-side fallback - middleware handles primary protection)
   useEffect(() => {
-    console.log('[AuthContext] Route protection check:', { loading, user: user?.email, pathname });
+    // Don't redirect while loading - let the server middleware handle initial auth
     if (loading) {
-      console.log('[AuthContext] Still loading, skipping route protection');
       return;
     }
 
     const isPublicRoute = PUBLIC_ROUTES.some(route => pathname?.startsWith(route));
 
-    if (!user && !isPublicRoute) {
-      // Not authenticated and trying to access protected route
-      console.log('[AuthContext] No user and not public route, redirecting to login');
+    // Only redirect on client-side navigation when definitively not authenticated
+    // The server middleware handles the initial page load protection
+    if (!user && !isPublicRoute && pathname?.startsWith('/admin')) {
+      console.log('[AuthContext] Client-side redirect: no user for protected route');
       const redirectParam = pathname ? `?redirectTo=${encodeURIComponent(pathname)}` : '';
       router.push(`${loginPath}${redirectParam}`);
-    } else {
-      console.log('[AuthContext] Route protection passed:', { isPublicRoute, hasUser: !!user });
     }
   }, [user, loading, pathname, router, loginPath]);
 

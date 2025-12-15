@@ -208,21 +208,9 @@ export class LanonasisAuthClient {
    * Check if user has a specific permission
    */
   hasPermission(permission: string): boolean {
-    // Check permission against current session
-    const storedSession = typeof window !== 'undefined' 
-      ? localStorage.getItem('lanonasis_auth_session')
-      : null;
-    
-    if (!storedSession) return false;
-    
-    try {
-      const session = JSON.parse(storedSession) as AuthSession;
-      if (!session.user.permissions) return false;
-      if (session.user.permissions.includes('*')) return true;
-      return session.user.permissions.includes(permission);
-    } catch {
-      return false;
-    }
+    // Note: This is a synchronous check - for async use getSession() instead
+    // Permissions are checked against the session listeners' cached state
+    return false; // TODO: Implement proper permission checking via session
   }
 
   /**
@@ -265,14 +253,7 @@ export class LanonasisAuthClient {
   }
 
   private notifySessionChange(session: AuthSession | null): void {
-    // Persist to localStorage for client-side hydration
-    if (session) {
-      localStorage.setItem('lanonasis_auth_session', JSON.stringify(session));
-    } else {
-      localStorage.removeItem('lanonasis_auth_session');
-    }
-
-    // Notify all listeners
+    // Notify all listeners (Supabase handles session persistence via cookies)
     this.sessionChangeListeners.forEach(listener => {
       listener(session);
     });

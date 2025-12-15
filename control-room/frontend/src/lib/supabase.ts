@@ -12,17 +12,11 @@ if (!supabaseUrl || !supabaseAnonKey) {
 }
 
 // Create ONE browser auth client only
-export const supabase = createBrowserClient(supabaseUrl || 'https://placeholder.supabase.co', supabaseAnonKey || 'placeholder-key', {
-  cookieOptions: {
-    name: 'fixer-control-room-auth',
-  },
-  auth: {
-    // Optional: set a custom storage key to avoid collisions across apps on same domain
-    storageKey: 'fixer-control-room-auth',
-    autoRefreshToken: true,
-    persistSession: true,
-  },
-})
+// Uses cookie-based storage by default (SSR compatible)
+export const supabase = createBrowserClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+)
 
 // NOTE: Do NOT create a service-role/admin client in this browser bundle.
 // Import admin client from './supabase-admin' in server-only code.

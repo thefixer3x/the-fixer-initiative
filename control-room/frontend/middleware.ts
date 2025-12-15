@@ -1,13 +1,12 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 /**
- * Authentication Proxy
+ * Next.js Middleware for authentication
  * Protects /admin routes from unauthorized access
- * Migrated from middleware.ts per Next.js 16 convention
  */
-export async function proxy(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   let res = NextResponse.next({
     request: {
       headers: req.headers,
@@ -19,45 +18,19 @@ export async function proxy(req: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      cookieOptions: {
-        name: 'fixer-control-room-auth',
-      },
       cookies: {
-        get(name: string) {
-          return req.cookies.get(name)?.value
+        getAll() {
+          return req.cookies.getAll()
         },
-        set(name: string, value: string, options: CookieOptions) {
-          req.cookies.set({
-            name,
-            value,
-            ...options,
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value, options }) => {
+            req.cookies.set(name, value)
           })
           res = NextResponse.next({
-            request: {
-              headers: req.headers,
-            },
+            request: req,
           })
-          res.cookies.set({
-            name,
-            value,
-            ...options,
-          })
-        },
-        remove(name: string, options: CookieOptions) {
-          req.cookies.set({
-            name,
-            value: '',
-            ...options,
-          })
-          res = NextResponse.next({
-            request: {
-              headers: req.headers,
-            },
-          })
-          res.cookies.set({
-            name,
-            value: '',
-            ...options,
+          cookiesToSet.forEach(({ name, value, options }) => {
+            res.cookies.set(name, value, options)
           })
         },
       },
@@ -69,7 +42,7 @@ export async function proxy(req: NextRequest) {
 
   // Check if accessing admin routes
   const isAdminRoute = req.nextUrl.pathname.startsWith('/admin')
-  
+
   if (isAdminRoute && !session) {
     // Redirect to login if not authenticated
     const redirectUrl = req.nextUrl.clone()
@@ -81,7 +54,7 @@ export async function proxy(req: NextRequest) {
   return res
 }
 
-// Configure which routes to run proxy on
+// Configure which routes to run middleware on
 export const config = {
   matcher: [
     /*
@@ -94,4 +67,3 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 }
-
