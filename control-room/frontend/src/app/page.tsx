@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import { Database, Server, Activity, ExternalLink, Users, TrendingUp, RefreshCw, AlertCircle, FileText } from 'lucide-react'
 import { realDataService, type RealTimeMetrics, type TopApp, type RealTimeActivity } from '@/lib/real-data-service'
+import SupabaseMetricsMonitor from '@/components/SupabaseMetricsMonitor'
+import VPSHealthMonitor from '@/components/VPSHealthMonitor'
 import { toast } from 'sonner'
 
 export default function HomePage() {
@@ -214,6 +216,12 @@ export default function HomePage() {
             </div>
           </div>
         ) : null}
+
+        {/* Infrastructure Monitoring */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <SupabaseMetricsMonitor />
+          <VPSHealthMonitor />
+        </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
