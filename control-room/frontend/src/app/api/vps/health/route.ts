@@ -4,31 +4,32 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-const VPS_HOST = '168.231.74.29';
-const VPS_PORT = '2222';
-const VPS_USER = 'root';
+const VPS_HOST = process.env.VPS_HOST || '138.199.231.0';
+const VPS_PORT = process.env.VPS_PORT || '2222';
+const VPS_USER = process.env.VPS_USER || 'root';
 
 // Comprehensive VPS health check
 export async function GET(request: NextRequest) {
   try {
+    // Run locally since we're on the VPS
     const checks = await Promise.allSettled([
       // System health
-      execAsync(`ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "uptime"`),
+      execAsync(`uptime`),
 
       // Disk usage
-      execAsync(`ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "df -h / | tail -n 1"`),
+      execAsync(`df -h / | tail -n 1`),
 
       // Memory usage
-      execAsync(`ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "free -m"`),
+      execAsync(`free -m`),
 
       // CPU usage
-      execAsync(`ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "top -bn1 | grep 'Cpu(s)' | awk '{print \\$2}'")`),
+      execAsync(`top -bn1 | grep 'Cpu(s)' | awk '{print $2}'`),
 
       // PM2 status
-      execAsync(`ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "pm2 jlist"`),
+      execAsync(`pm2 jlist`),
 
       // Nginx status
-      execAsync(`ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "systemctl status nginx | grep Active"`),
+      execAsync(`systemctl status nginx | grep Active`),
 
       // API endpoint check
       fetch('https://api.lanonasis.com/health').then(r => r.json())

@@ -4,16 +4,15 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-const VPS_HOST = '168.231.74.29';
-const VPS_PORT = '2222';
-const VPS_USER = 'root';
+const VPS_HOST = process.env.VPS_HOST || '138.199.231.0';
+const VPS_PORT = process.env.VPS_PORT || '2222';
+const VPS_USER = process.env.VPS_USER || 'root';
 
 // Service management endpoint - GET for status, POST for actions
 export async function GET(request: NextRequest) {
   try {
-    const { stdout } = await execAsync(
-      `ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "pm2 jlist"`
-    );
+    // Run locally since we're on the VPS
+    const { stdout } = await execAsync(`pm2 jlist`);
 
     const services = JSON.parse(stdout);
 
@@ -70,9 +69,8 @@ export async function POST(request: NextRequest) {
         );
     }
 
-    const { stdout, stderr } = await execAsync(
-      `ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "${command} && pm2 save"`
-    );
+    // Run locally since we're on the VPS
+    const { stdout, stderr } = await execAsync(`${command} && pm2 save`);
 
     return NextResponse.json({
       success: true,

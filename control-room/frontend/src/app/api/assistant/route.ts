@@ -1,4 +1,4 @@
-import { convertToCoreMessages, streamText, tool } from 'ai';
+import { convertToCoreMessages, streamText, tool, stepCountIs } from 'ai';
 import { createOpenAI } from '@ai-sdk/openai';
 import { z } from 'zod';
 
@@ -45,7 +45,15 @@ Guidelines:
 - If a service is down, suggest troubleshooting steps
 - Be concise but thorough in your responses
 
-You have access to real-time data from the TFI infrastructure. Use your tools to gather information before answering questions about system state.`;
+CRITICAL RESPONSE FORMAT:
+- NEVER dump raw JSON to the user. Always interpret tool results and respond in natural, conversational language.
+- Summarize data meaningfully: instead of showing raw numbers, say things like "All 7 services are running healthy" or "The central-gateway has been up for 9 days with no restarts."
+- Format important metrics in a readable way (e.g., "Memory: 34MB", "CPU: 0.5%", "Uptime: 9 days")
+- If something looks concerning (high memory, many restarts, service down), proactively mention it and suggest next steps.
+- When asked about specific services, give a focused summary with the relevant details.
+- Use bullet points or brief tables only when comparing multiple services.
+
+You have access to real-time data from the TFI infrastructure. Use your tools to gather information, then ALWAYS interpret and explain the results in a helpful, human-friendly way.`;
 
 export async function POST(req: Request) {
   try {
@@ -58,6 +66,7 @@ export async function POST(req: Request) {
       system: SYSTEM_PROMPT,
       // AI SDK UI sends UIMessage[]; convert to model-friendly messages
       messages: convertToCoreMessages(messages),
+      stopWhen: stepCountIs(5), // Allow AI to call tools and then formulate natural language responses
       tools: {
         // Ecosystem-wide health check
         getEcosystemStatus: tool({

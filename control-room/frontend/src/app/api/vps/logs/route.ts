@@ -4,9 +4,9 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-const VPS_HOST = '168.231.74.29';
-const VPS_PORT = '2222';
-const VPS_USER = 'root';
+const VPS_HOST = process.env.VPS_HOST || '138.199.231.0';
+const VPS_PORT = process.env.VPS_PORT || '2222';
+const VPS_USER = process.env.VPS_USER || 'root';
 
 // Get logs for a specific service
 export async function GET(request: NextRequest) {
@@ -22,8 +22,9 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Run locally since we're on the VPS
     const { stdout, stderr } = await execAsync(
-      `ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "pm2 logs ${serviceName} --lines ${lines} --nostream"`
+      `pm2 logs ${serviceName} --lines ${lines} --nostream`
     );
 
     return NextResponse.json({
@@ -53,8 +54,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Run locally since we're on the VPS
     const { stdout } = await execAsync(
-      `ssh -p ${VPS_PORT} -o StrictHostKeyChecking=no ${VPS_USER}@${VPS_HOST} "pm2 logs ${serviceName} --lines ${lines} --nostream --raw"`
+      `pm2 logs ${serviceName} --lines ${lines} --nostream --raw`
     );
 
     return NextResponse.json({
